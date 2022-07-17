@@ -12,3 +12,7 @@ export async function currentBranch() {
   // get from git
   return (await execCapture('git', ['rev-parse', '--abbrev-ref', 'HEAD'])).result.replace(/\n*$/, '');
 }
+
+export async function tag(tagName: string) {
+  return execCapture('git', ['tag', tagName]);
+}

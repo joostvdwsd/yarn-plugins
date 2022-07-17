@@ -1,8 +1,7 @@
 import { BaseCommand } from "@yarnpkg/cli";
 import { Configuration, Project } from "@yarnpkg/core";
+import { DEFAULT_REPO_VERSION } from "../configuration";
 import { updateWorkspacesWithVersion } from "../utils/workspace";
-
-const DEFAULT_REPO_VERSION = '0.0.0';
 
 export class GitVersionResetCommand extends BaseCommand {
   static paths = [

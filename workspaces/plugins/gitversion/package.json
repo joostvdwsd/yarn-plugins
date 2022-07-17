@@ -20,7 +20,7 @@
     "build": "builder build plugin && yarn move",
     "move": "cp bundles/@yarnpkg/plugin-gitversion.js ../../../dist/gitversion.js"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "devDependencies": {
     "@types/changelog-parser": "^2.8.1",
     "@types/conventional-changelog": "^3",

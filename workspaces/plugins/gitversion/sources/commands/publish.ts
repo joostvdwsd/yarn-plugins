@@ -4,6 +4,7 @@ import { GitVersionConfiguration } from "../configuration";
 import { BranchType, ChangelogEntry } from "../types";
 
 import { join as pjoin } from 'path';
+import { GitVersionTagCommand } from "./tag";
 const parseChangelog = require("changelog-parser");
 
 export class GitVersionPublishCommand extends BaseCommand {
@@ -12,6 +13,12 @@ export class GitVersionPublishCommand extends BaseCommand {
   ];
 
   async execute() {
+
+    // first execute tag
+    const tagCommand = new GitVersionTagCommand();
+    tagCommand.context = this.context;
+    tagCommand.cli = this.cli;
+    await tagCommand.execute();
     
     const configuration = await GitVersionConfiguration.fromContext(this.context);
 

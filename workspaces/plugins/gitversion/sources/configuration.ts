@@ -21,6 +21,9 @@ declare module '@yarnpkg/core' {
   }
 }
 
+export const DEFAULT_REPO_VERSION = '0.0.0';
+
+
 export class GitVersionConfiguration {
 
   static definition : Partial<ConfigurationDefinitionMap> = {

@@ -5,6 +5,7 @@ import { GitVersionResetCommand } from './commands/reset';
 import { GitVersionBumpCommand } from './commands/bump';
 import { GitVersionPublishCommand } from './commands/publish';
 import { GitVersionCheckCommand } from './commands/check';
+import { GitVersionTagCommand } from './commands/tag';
 
 
 const plugin: Plugin = {
@@ -14,6 +15,7 @@ const plugin: Plugin = {
     GitVersionRestoreCommand,
     GitVersionResetCommand,
     GitVersionBumpCommand,
+    GitVersionTagCommand,
     GitVersionPublishCommand,
   ],
   hooks: {
