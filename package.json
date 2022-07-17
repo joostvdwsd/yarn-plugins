@@ -1,0 +1,19 @@
+{
+  "name": "yarn-plugins",
+  "version": "0.0.1",
+  "description": "Yarn utility plugins",
+  "main": "index.js",
+  "repository": "https://github.com/joostvdwsd/yarn-plugins.git",
+  "author": "Joost van der Waal <joost.npm@jvdwaal.nl>",
+  "license": "MIT",
+  "private": true,
+  "packageManager": "yarn@3.2.1",
+  "workspaces": [
+    "./workspaces/plugins/*"
+  ],
+  "devDependencies": {
+    "conventional-changelog-angular": "^5.0.13",
+    "standard-version": "^9.5.0",
+    "typescript": "^4.7.4"
+  }
+}
