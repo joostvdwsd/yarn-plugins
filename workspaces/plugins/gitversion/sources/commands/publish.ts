@@ -5,6 +5,7 @@ import { BranchType, ChangelogEntry } from "../types";
 
 import { join as pjoin } from 'path';
 import { GitVersionTagCommand } from "./tag";
+import { execCapture } from "../utils/exec";
 const parseChangelog = require("changelog-parser");
 
 export class GitVersionPublishCommand extends BaseCommand {
@@ -35,7 +36,7 @@ export class GitVersionPublishCommand extends BaseCommand {
         if (configuration.versionBranch.branchType === BranchType.FEATURE || configuration.versionBranch.branchType === BranchType.PRERELEASE) {
           releaseTagPostfix = ['--tag', configuration.versionBranch.name];
         }
-        // execCapture('yarn', ['npm', 'publish', ...releaseTagPostfix], workspace.cwd);
+        execCapture('yarn', ['npm', 'publish', ...releaseTagPostfix], workspace.cwd);
       })
       await Promise.all(publishCommands);
 

@@ -36,7 +36,7 @@ export class GitVersionConfiguration {
       isArray: true,
       type: SettingsType.STRING,
       default: [
-        '$feature/(.*)^'
+        '^feature/(.*)$'
       ]
     },
     releaseBranchPatterns: {
@@ -47,7 +47,7 @@ export class GitVersionConfiguration {
       isArray: true,
       type: SettingsType.STRING,
       default: [
-        '$release/(.*)^'
+        '^release/(.*)$'
       ]
     },
     mainBranch: {
@@ -86,6 +86,9 @@ export class GitVersionConfiguration {
   constructor(yarnConfig: Configuration, branchName: string) {
     this.yarnConfig = yarnConfig;
     const featurePattenStrings = yarnConfig.get('featureBranchPatterns');
+
+    console.log(featurePattenStrings);
+    console.log(branchName);
 
     this.featureBranchPatterns = featurePattenStrings.map((pattern) => new RegExp(pattern));
 

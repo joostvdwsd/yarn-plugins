@@ -1,6 +1,6 @@
 {
   "name": "yarn-plugins",
-  "version": "0.0.2",
+  "version": "0.0.0",
   "description": "Yarn utility plugins",
   "main": "index.js",
   "repository": "https://github.com/joostvdwsd/yarn-plugins.git",
