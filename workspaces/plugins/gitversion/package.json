@@ -17,7 +17,8 @@
     "semver": "^7.3.7"
   },
   "scripts": {
-    "build": "builder build plugin"
+    "build": "builder build plugin && yarn move",
+    "move": "cp bundles/@yarnpkg/plugin-gitversion.js ../../../dist/gitversion.js"
   },
   "version": "0.0.1",
   "devDependencies": {
