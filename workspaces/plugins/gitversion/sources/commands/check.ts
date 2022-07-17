@@ -1,7 +1,5 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Project, miscUtils } from "@yarnpkg/core";
-import { CachingStrategy } from "@yarnpkg/core/lib/miscUtils";
-import conventionalRecommendedBump from "conventional-recommended-bump";
+import { Project } from "@yarnpkg/core";
 import { GitVersionConfiguration } from "../configuration";
 
 export class GitVersionCheckCommand extends BaseCommand {
@@ -11,6 +9,7 @@ export class GitVersionCheckCommand extends BaseCommand {
 
   async execute() {
     const configuration = await GitVersionConfiguration.fromContext(this.context);
+    console.log(configuration.versionBranch);
 
     const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
@@ -18,9 +17,6 @@ export class GitVersionCheckCommand extends BaseCommand {
       console.log(child.locator.scope, child.locator.name, child.manifest.private, child.manifest.version)
     })
 
-
-    const parserOpts = require('conventional-changelog-angular');
-    console.log(parserOpts)
 
     // conventionalRecommendedBump({
       

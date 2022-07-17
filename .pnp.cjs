@@ -129,10 +129,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@joostvdwsd/yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"],\
             ["@types/changelog-parser", "npm:2.8.1"],\
-            ["@types/conventional-changelog", "npm:3.1.1"],\
-            ["@types/conventional-changelog-config-spec", "npm:2.1.1"],\
-            ["@types/conventional-changelog-preset-loader", "npm:2.3.1"],\
-            ["@types/conventional-recommended-bump", "npm:6.1.0"],\
             ["@types/node", "npm:14.18.22"],\
             ["@types/semver", "npm:7.3.10"],\
             ["@yarnpkg/builder", "npm:3.2.2"],\
@@ -142,11 +138,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["changelog-parser", "npm:2.8.1"],\
             ["clipanion", "virtual:eb5cfe2156d68d5ba3003cbe1d4fdfa3b6baeba4416e7ffb26738baf4df2a2e84ef987f4eb039ae7297d6d2f771ce51703b7ebb43d848a423a5d3ffb19bb1f9b#npm:3.2.0-rc.11"],\
             ["compare-versions", "npm:4.1.3"],\
-            ["conventional-changelog", "npm:3.1.25"],\
-            ["conventional-changelog-config-spec", "npm:2.1.0"],\
-            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
-            ["conventional-changelog-preset-loader", "npm:2.3.4"],\
-            ["conventional-recommended-bump", "npm:6.1.0"],\
             ["semver", "npm:7.3.7"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"]\
           ],\
@@ -225,104 +216,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@types/conventional-changelog", [\
-        ["npm:3.1.1", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-changelog-npm-3.1.1-ea1bab2ff4-9278f6603f.zip/node_modules/@types/conventional-changelog/",\
-          "packageDependencies": [\
-            ["@types/conventional-changelog", "npm:3.1.1"],\
-            ["@types/conventional-changelog-core", "npm:4.2.1"],\
-            ["@types/conventional-changelog-writer", "npm:4.0.1"],\
-            ["@types/conventional-commits-parser", "npm:3.0.2"],\
-            ["@types/node", "npm:18.0.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/conventional-changelog-config-spec", [\
-        ["npm:2.1.1", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-changelog-config-spec-npm-2.1.1-e2a75dfb3f-7b79cf4fb1.zip/node_modules/@types/conventional-changelog-config-spec/",\
-          "packageDependencies": [\
-            ["@types/conventional-changelog-config-spec", "npm:2.1.1"],\
-            ["@types/json-schema", "npm:7.0.11"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/conventional-changelog-core", [\
-        ["npm:4.2.1", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-changelog-core-npm-4.2.1-8006ee76bd-bd8557c1cb.zip/node_modules/@types/conventional-changelog-core/",\
-          "packageDependencies": [\
-            ["@types/conventional-changelog-core", "npm:4.2.1"],\
-            ["@types/conventional-changelog-writer", "npm:4.0.1"],\
-            ["@types/conventional-commits-parser", "npm:3.0.2"],\
-            ["@types/conventional-recommended-bump", "npm:6.1.0"],\
-            ["@types/git-raw-commits", "npm:2.0.1"],\
-            ["@types/node", "npm:18.0.4"],\
-            ["@types/normalize-package-data", "npm:2.4.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/conventional-changelog-preset-loader", [\
-        ["npm:2.3.1", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-changelog-preset-loader-npm-2.3.1-79b5888b19-8135e5c360.zip/node_modules/@types/conventional-changelog-preset-loader/",\
-          "packageDependencies": [\
-            ["@types/conventional-changelog-preset-loader", "npm:2.3.1"],\
-            ["@types/conventional-changelog-core", "npm:4.2.1"],\
-            ["@types/conventional-changelog-writer", "npm:4.0.1"],\
-            ["@types/conventional-commits-parser", "npm:3.0.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/conventional-changelog-writer", [\
-        ["npm:4.0.1", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-changelog-writer-npm-4.0.1-2d9321b5ca-1e029327a9.zip/node_modules/@types/conventional-changelog-writer/",\
-          "packageDependencies": [\
-            ["@types/conventional-changelog-writer", "npm:4.0.1"],\
-            ["@types/conventional-commits-parser", "npm:3.0.2"],\
-            ["@types/node", "npm:18.0.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/conventional-commits-parser", [\
-        ["npm:3.0.2", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-commits-parser-npm-3.0.2-a365962778-886c9c35db.zip/node_modules/@types/conventional-commits-parser/",\
-          "packageDependencies": [\
-            ["@types/conventional-commits-parser", "npm:3.0.2"],\
-            ["@types/node", "npm:18.0.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/conventional-recommended-bump", [\
-        ["npm:6.1.0", {\
-          "packageLocation": "./.yarn/cache/@types-conventional-recommended-bump-npm-6.1.0-be55f272c7-123c0d7a3b.zip/node_modules/@types/conventional-recommended-bump/",\
-          "packageDependencies": [\
-            ["@types/conventional-recommended-bump", "npm:6.1.0"],\
-            ["@types/conventional-changelog-core", "npm:4.2.1"],\
-            ["@types/conventional-changelog-writer", "npm:4.0.1"],\
-            ["@types/conventional-commits-parser", "npm:3.0.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@types/emscripten", [\
         ["npm:1.39.6", {\
           "packageLocation": "./.yarn/cache/@types-emscripten-npm-1.39.6-c9c4021365-437f2f9cdf.zip/node_modules/@types/emscripten/",\
           "packageDependencies": [\
             ["@types/emscripten", "npm:1.39.6"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/git-raw-commits", [\
-        ["npm:2.0.1", {\
-          "packageLocation": "./.yarn/cache/@types-git-raw-commits-npm-2.0.1-917977ae5e-b5d41433a5.zip/node_modules/@types/git-raw-commits/",\
-          "packageDependencies": [\
-            ["@types/git-raw-commits", "npm:2.0.1"],\
-            ["@types/node", "npm:18.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -341,15 +239,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-json-buffer-npm-3.0.0-9f2fe89eaa-6b0a371dd6.zip/node_modules/@types/json-buffer/",\
           "packageDependencies": [\
             ["@types/json-buffer", "npm:3.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/json-schema", [\
-        ["npm:7.0.11", {\
-          "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.11-79462ae5ca-527bddfe62.zip/node_modules/@types/json-schema/",\
-          "packageDependencies": [\
-            ["@types/json-schema", "npm:7.0.11"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1698,16 +1587,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/conventional-changelog-conventionalcommits-npm-4.6.3-8a4923dc62-7b8e8a21eb.zip/node_modules/conventional-changelog-conventionalcommits/",\
           "packageDependencies": [\
             ["conventional-changelog-conventionalcommits", "npm:4.6.3"],\
-            ["compare-func", "npm:2.0.0"],\
-            ["lodash", "npm:4.17.21"],\
-            ["q", "npm:1.5.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:5.0.0", {\
-          "packageLocation": "./.yarn/cache/conventional-changelog-conventionalcommits-npm-5.0.0-a270202fe8-b67d12e4e0.zip/node_modules/conventional-changelog-conventionalcommits/",\
-          "packageDependencies": [\
-            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
             ["compare-func", "npm:2.0.0"],\
             ["lodash", "npm:4.17.21"],\
             ["q", "npm:1.5.1"]\
