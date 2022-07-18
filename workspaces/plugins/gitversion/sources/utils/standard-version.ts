@@ -2,19 +2,39 @@ import { PortablePath } from "@yarnpkg/fslib";
 import { BranchType, GitVersionBranch } from "../types";
 import { execCapture } from "./exec";
 
-export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, cwd: PortablePath) {
-  if (versionBranch.branchType === BranchType.FEATURE) {
+const DEFAULT_FLAGS = [
+  '--path=.', 
+  '--no-sign', 
+  '--skip.commit', 
+  '--skip.tag'
+]
 
-    return execCapture('yarn', ['standard-version', `--prerelease=${versionBranch.name}`, '-release-as=patch', '--path=.', '--skip.changelog', '--no-sign', '--skip.commit', '--skip.tag', `--tag-prefix='${tagPrefix}'`], cwd);
-  } else if (versionBranch.branchType === BranchType.PRERELEASE) {
-    return execCapture('yarn', ['standard-version', `--prerelease=${versionBranch.name}`, '--path=.', '--no-sign', '--skip.commit', '--skip.tag', `--tag-prefix='${tagPrefix}'`], cwd);
-  } else if (versionBranch.branchType === BranchType.RELEASE || versionBranch.branchType === BranchType.MAIN) {
-    return execCapture('yarn', ['standard-version', '--path=.', '--no-sign', '--skip.commit', '--skip.tag', `--tag-prefix='${tagPrefix}'`], cwd);
-  } else {
-    // ignore
+export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, cwd: PortablePath, explicitVersion?: string) {
+
+  const flags : string [] = DEFAULT_FLAGS;
+  flags.push(`--tag-prefix='${tagPrefix}'`);
+
+  if (explicitVersion) {
+    flags.push(`--release-as=${explicitVersion}`);
   }
+
+  if (versionBranch.branchType === BranchType.FEATURE) {
+    flags.push(
+      `--prerelease=${versionBranch.name}`, 
+      '--skip.changelog'
+    );
+
+    if (!explicitVersion) {
+      flags.push('--release-as=patch')
+    }
+
+  } else if (versionBranch.branchType === BranchType.PRERELEASE) {
+    flags.push(
+      `--prerelease=${versionBranch.name}`, 
+    );    
+  } else if (versionBranch.branchType === BranchType.UNKNOWN) {
+    return;
+  }
+
+  return execCapture('yarn', ['standard-version', ...flags], cwd);
 }
-
-// standard-version --prerelease=$FEATURE_NAME --release-as=patch --path=. --skip.changelog --skip.commit --tag-prefix='${tagPrefix}'
-
-// exec: `standard-version --prerelease=$PRERELEASE_NAME --path=. --skip.commit --tag-prefix='${tagPrefix}'`,

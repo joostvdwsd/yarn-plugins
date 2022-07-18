@@ -3,7 +3,6 @@ import { Project, Manifest } from "@yarnpkg/core";
 import { GitVersionConfiguration } from "../configuration";
 import { bump } from "../utils/standard-version";
 import { tagPrefix } from "../utils/tags";
-import { updateWorkspacesWithVersion } from "../utils/workspace";
 import { GitVersionRestoreCommand } from "./restore";
 
 export class GitVersionBumpCommand extends BaseCommand {
@@ -29,8 +28,12 @@ export class GitVersionBumpCommand extends BaseCommand {
       await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace.cwd);
       const newManifest = await Manifest.find(project.topLevelWorkspace.cwd);
 
-      if (newManifest.version) {
-        await updateWorkspacesWithVersion(project.workspaces, newManifest.version);
+      const newVersion = newManifest.version;
+      if (newVersion) {
+        const workspaceBumps = project.workspaces.map((workspace) => {
+          return bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), workspace.cwd, newVersion);
+        });
+        await Promise.all(workspaceBumps);
       }
     }
   }
