@@ -25,13 +25,13 @@ export class GitVersionBumpCommand extends BaseCommand {
     if (configuration.independentVersioning) {
       throw new Error('Not implemented')
     } else {
-      await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace.cwd);
+      await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace.cwd, project.topLevelWorkspace.cwd);
       const newManifest = await Manifest.find(project.topLevelWorkspace.cwd);
 
       const newVersion = newManifest.version;
       if (newVersion) {
-        const workspaceBumps = project.workspaces.map((workspace) => {
-          return bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), workspace.cwd, newVersion);
+        const workspaceBumps = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map((workspace) => {
+          return bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), workspace.cwd, project.topLevelWorkspace.cwd, newVersion);
         });
         await Promise.all(workspaceBumps);
       }

@@ -3,16 +3,17 @@ import { BranchType, GitVersionBranch } from "../types";
 import { execCapture } from "./exec";
 
 const DEFAULT_FLAGS = [
-  '--path=.', 
   '--no-sign', 
   '--skip.commit', 
   '--skip.tag'
 ]
 
-export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, cwd: PortablePath, explicitVersion?: string) {
+export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, cwd: PortablePath, execCwd: PortablePath, explicitVersion?: string) {
 
-  const flags : string [] = DEFAULT_FLAGS;
+  const flags : string [] = [...DEFAULT_FLAGS];
+  flags.push(`--path=${cwd}`), 
   flags.push(`--tag-prefix='${tagPrefix}'`);
+  flags.push(`--infile=${cwd}/CHANGELOG.md`)
 
   if (explicitVersion) {
     flags.push(`--release-as=${explicitVersion}`);
@@ -36,5 +37,7 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, c
     return;
   }
 
-  return execCapture('yarn', ['standard-version', ...flags], cwd);
+  const result = await execCapture('yarn', ['standard-version', ...flags], execCwd);
+  console.log(result);
+  return;
 }
