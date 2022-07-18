@@ -2,19 +2,19 @@
   "name": "@joostvdwsd/yarn-plugin-teams-notify",
   "main": "./sources/index.ts",
   "dependencies": {
-    "@yarnpkg/builder": "^4.0.0-rc.11",
-    "@yarnpkg/cli": "^4.0.0-rc.11",
-    "@yarnpkg/core": "^4.0.0-rc.11",
+    "@yarnpkg/builder": "^3",
+    "@yarnpkg/cli": "^3",
+    "@yarnpkg/core": "^3",
     "axios": "^0.27.2",
     "clipanion": "^3.2.0-rc.10"
   },
   "devDependencies": {
-    "@types/node": "^14.0.0",
-    "typescript": "4.8.0-beta"
+    "@types/node": "^14.18.21",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "build": "builder build plugin && yarn move",
     "move": "cp bundles/@yarnpkg/plugin-teams-notify.js ../../../dist/teams-notify.js"
   },
-  "version": "0.0.0"
+  "version": "0.0.3"
 }

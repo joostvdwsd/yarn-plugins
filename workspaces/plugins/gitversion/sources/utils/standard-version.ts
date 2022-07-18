@@ -11,12 +11,13 @@ const DEFAULT_FLAGS = [
 export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, cwd: PortablePath, execCwd: PortablePath, explicitVersion?: string) {
 
   const flags : string [] = [...DEFAULT_FLAGS];
-  flags.push(`--path=${cwd}`), 
+  flags.push(`--path='${cwd}'`), 
   flags.push(`--tag-prefix='${tagPrefix}'`);
-  flags.push(`--infile=${cwd}/CHANGELOG.md`)
+  flags.push(`--infile='${cwd}/CHANGELOG.md'`)
 
   if (explicitVersion) {
-    flags.push(`--release-as=${explicitVersion}`);
+    flags.push(`--release-as='${explicitVersion}'`);
+    flags.push(`--skip.bump`);
   }
 
   if (versionBranch.branchType === BranchType.FEATURE) {

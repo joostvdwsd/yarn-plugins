@@ -30,7 +30,9 @@ export class GitVersionBumpCommand extends BaseCommand {
 
       const newVersion = newManifest.version;
       if (newVersion) {
-        const workspaceBumps = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map((workspace) => {
+        const workspaceBumps = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map(async (workspace) => {
+          workspace.manifest.version = newVersion;
+          await workspace.persistManifest();
           return bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), workspace.cwd, project.topLevelWorkspace.cwd, newVersion);
         });
         await Promise.all(workspaceBumps);
