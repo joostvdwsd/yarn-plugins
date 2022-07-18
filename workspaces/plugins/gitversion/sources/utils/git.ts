@@ -16,3 +16,11 @@ export async function currentBranch() {
 export async function tag(tagName: string) {
   return execCapture('git', ['tag', tagName]);
 }
+
+export async function addAndCommit(files: string[], message: string) {
+  const addResponse = await execCapture('git', ['add', ...files]);
+  console.log(addResponse.result);
+  
+  const commitResponse = await execCapture('git', ['commit', ...files, '-m', message]);
+  console.log(commitResponse.result);  
+}

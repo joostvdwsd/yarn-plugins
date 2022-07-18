@@ -29,7 +29,7 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, c
       flags.push('--release-as=patch')
     }
 
-  } else if (versionBranch.branchType === BranchType.PRERELEASE) {
+  } else if (versionBranch.branchType === BranchType.PRERELEASE || versionBranch.branchType === BranchType.RELEASE) {
     flags.push(
       `--prerelease=${versionBranch.name}`, 
     );    
@@ -38,6 +38,6 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, c
   }
 
   const result = await execCapture('yarn', ['standard-version', ...flags], execCwd);
-  console.log(result);
+  console.log(result.result);
   return;
 }
