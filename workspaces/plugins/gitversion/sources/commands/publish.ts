@@ -16,17 +16,17 @@ export class GitVersionPublishCommand extends BaseCommand {
 
   async execute() {
 
-    // first execute tag
-    const tagCommand = new GitVersionTagCommand();
-    tagCommand.context = this.context;
-    tagCommand.cli = this.cli;
-    await tagCommand.execute();
+    // // first execute tag
+    // const tagCommand = new GitVersionTagCommand();
+    // tagCommand.context = this.context;
+    // tagCommand.cli = this.cli;
+    // await tagCommand.execute();
 
-    // also execute commit
-    const commitCommand = new GitVersionCommitCommand();
-    commitCommand.context = this.context;
-    commitCommand.cli = this.cli;
-    await commitCommand.execute();
+    // // also execute commit
+    // const commitCommand = new GitVersionCommitCommand();
+    // commitCommand.context = this.context;
+    // commitCommand.cli = this.cli;
+    // await commitCommand.execute();
     
     const configuration = await GitVersionConfiguration.fromContext(this.context);
 
