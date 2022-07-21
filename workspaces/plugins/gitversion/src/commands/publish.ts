@@ -8,6 +8,7 @@ import { GitVersionTagCommand } from "./tag";
 import { execCapture } from "../utils/exec";
 import { GitVersionCommitCommand } from "./commit";
 import { convertLocatorToDescriptor, makeIdent } from "@yarnpkg/core/lib/structUtils";
+import { existsSync } from "fs";
 const parseChangelog = require("changelog-parser");
 
 export class GitVersionPublishCommand extends BaseCommand {
@@ -60,14 +61,19 @@ export class GitVersionPublishCommand extends BaseCommand {
   }
 
   async readChangeLog(workspace: Workspace) : Promise<PublishedPackage> {
-    const changeLog = await parseChangelog({
-      filePath: pjoin(workspace.cwd, 'CHANGELOG.md'),
-      removeMarkdown: false
-    })
+    const filePath = pjoin(workspace.cwd, 'CHANGELOG.md');
 
     const releasedVersion = workspace.manifest.version;
 
-    const currentReleaseChangelog = changeLog.versions.find((versionEntry : any) => versionEntry.version === releasedVersion);
+    let currentReleaseChangelog : string | undefined;
+    
+    if (existsSync(filePath)) {
+      const changeLog = await parseChangelog({
+        filePath: pjoin(workspace.cwd, 'CHANGELOG.md'),
+        removeMarkdown: false
+      })
+      const currentReleaseChangelog = changeLog.versions.find((versionEntry : any) => versionEntry.version === releasedVersion);
+    }
 
     return {
       version: releasedVersion || '0.0.0',
