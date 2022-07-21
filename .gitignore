@@ -1,2 +1,4 @@
 # .yarn/cache
 .yarn/unplugged
+
+lib/**

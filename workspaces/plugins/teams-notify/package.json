@@ -1,10 +1,12 @@
 {
   "name": "@joostvdwsd/yarn-plugin-teams-notify",
-  "main": "./sources/index.ts",
+  "main": "./src/index.ts",
   "dependencies": {
+    "@joostvdwsd/yarn-plugin-gitversion": "workspace:^",
     "@yarnpkg/builder": "^3",
     "@yarnpkg/cli": "^3",
     "@yarnpkg/core": "^3",
+    "adaptivecards": "^2.10.0",
     "axios": "^0.27.2",
     "clipanion": "^3.2.0-rc.10"
   },
@@ -16,5 +18,16 @@
     "build": "builder build plugin && yarn move",
     "move": "cp bundles/@yarnpkg/plugin-teams-notify.js ../../../dist/teams-notify.js"
   },
-  "version": "0.0.3"
+  "version": "0.0.3",
+  "publishConfig": {
+    "main": "./lib/index.js",
+    "typings": "./lib/index.d.ts"
+  },
+  "files": [
+    "/bundles/**/*",
+    "/lib/**/*"
+  ],
+  "yarn.build": {
+    "output": "lib"
+  }
 }

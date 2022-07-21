@@ -71,7 +71,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joostvdwsd/yarn-plugin-gitversion@workspace:workspaces/plugins/gitversion":
+"@joostvdwsd/yarn-plugin-gitversion@workspace:^, @joostvdwsd/yarn-plugin-gitversion@workspace:workspaces/plugins/gitversion":
   version: 0.0.0-use.local
   resolution: "@joostvdwsd/yarn-plugin-gitversion@workspace:workspaces/plugins/gitversion"
   dependencies:
@@ -94,10 +94,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@joostvdwsd/yarn-plugin-teams-notify@workspace:workspaces/plugins/teams-notify"
   dependencies:
+    "@joostvdwsd/yarn-plugin-gitversion": "workspace:^"
     "@types/node": ^14.18.21
     "@yarnpkg/builder": ^3
     "@yarnpkg/cli": ^3
     "@yarnpkg/core": ^3
+    adaptivecards: ^2.10.0
     axios: ^0.27.2
     clipanion: ^3.2.0-rc.10
     typescript: ^4.7.4
@@ -733,6 +735,13 @@ __metadata:
   bin:
     JSONStream: ./bin.js
   checksum: 2605fa124260c61bad38bb65eba30d2f72216a78e94d0ab19b11b4e0327d572b8d530c0c9cc3b0764f727ad26d39e00bf7ebad57781ca6368394d73169c59e46
+  languageName: node
+  linkType: hard
+
+"adaptivecards@npm:^2.10.0":
+  version: 2.10.0
+  resolution: "adaptivecards@npm:2.10.0"
+  checksum: 7caecfecde2c38469029310b97dc488fb4cf228b1838120a976507bd06994bea0e48a1012c3350605e260cd7d0aaa1913b5835ac93fec24de8a60720c56561a5
   languageName: node
   linkType: hard
 

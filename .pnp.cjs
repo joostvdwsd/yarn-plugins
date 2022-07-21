@@ -154,10 +154,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./workspaces/plugins/teams-notify/",\
           "packageDependencies": [\
             ["@joostvdwsd/yarn-plugin-teams-notify", "workspace:workspaces/plugins/teams-notify"],\
+            ["@joostvdwsd/yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"],\
             ["@types/node", "npm:14.18.22"],\
             ["@yarnpkg/builder", "npm:3.2.2"],\
             ["@yarnpkg/cli", "virtual:d40ba5d4ebba67f7e6c606a481b04161cf8100cd472b6e44a51622053337f3ef10da1583ecdd114ba86b5d01c78bc51076df27f565c408a0629cee87a79f8eca#npm:3.2.1"],\
             ["@yarnpkg/core", "npm:3.2.2"],\
+            ["adaptivecards", "npm:2.10.0"],\
             ["axios", "npm:0.27.2"],\
             ["clipanion", "virtual:eb5cfe2156d68d5ba3003cbe1d4fdfa3b6baeba4416e7ffb26738baf4df2a2e84ef987f4eb039ae7297d6d2f771ce51703b7ebb43d848a423a5d3ffb19bb1f9b#npm:3.2.0-rc.11"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"]\
@@ -1110,6 +1112,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["JSONStream", "npm:1.3.5"],\
             ["jsonparse", "npm:1.3.1"],\
             ["through", "npm:2.3.8"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["adaptivecards", [\
+        ["npm:2.10.0", {\
+          "packageLocation": "./.yarn/cache/adaptivecards-npm-2.10.0-1923497330-7caecfecde.zip/node_modules/adaptivecards/",\
+          "packageDependencies": [\
+            ["adaptivecards", "npm:2.10.0"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -1,6 +1,6 @@
 {
   "name": "@joostvdwsd/yarn-plugin-gitversion",
-  "main": "./sources/index.ts",
+  "main": "./src/index.ts",
   "dependencies": {
     "@yarnpkg/builder": "^3",
     "@yarnpkg/cli": "^3",
@@ -12,7 +12,8 @@
     "semver": "^7.3.7"
   },
   "scripts": {
-    "build": "builder build plugin && yarn move",
+    "build": "builder build plugin && tsc --build && yarn move",
+    "check": "tsc --noEmit",
     "move": "cp bundles/@yarnpkg/plugin-gitversion.js ../../../dist/gitversion.js"
   },
   "version": "0.0.3",
@@ -23,12 +24,14 @@
     "typescript": "^4.7.4"
   },
   "publishConfig": {
-    "main": "./bundles/@jvdwaalsd/yarn-plugin-gitversion.js"
+    "main": "./lib/index.js",
+    "typings": "./lib/index.d.ts"
   },
   "files": [
-    "/bundles/**/*"
+    "/bundles/**/*",
+    "/lib/**/*"
   ],
   "yarn.build": {
-    "output": "bundles"
+    "output": "lib"
   }
 }
