@@ -1,5 +1,5 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Project, structUtils, Workspace } from "@yarnpkg/core";
+import { LightReport, MessageName, Project, structUtils, Workspace } from "@yarnpkg/core";
 import { GitVersionConfiguration } from "../utils/configuration";
 import { BranchType, PublishedPackage, PublishedVersion } from "../types";
 
@@ -34,20 +34,25 @@ export class GitVersionPublishCommand extends BaseCommand {
 
     const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
+    const report = new LightReport({
+      configuration: configuration.yarnConfig,
+      stdout: this.context.stdout,      
+    })
+
     if (configuration.independentVersioning) {
       throw new Error('Not implemented')
     } else {
 
       const publicWorkspaces = project.workspaces.filter(this.filterPublicWorkspace);
 
-      const publishCommands = publicWorkspaces.map((workspace) => {
+      for (const workspace of publicWorkspaces) {
         let releaseTagPostfix : string[] = [];
         if (configuration.versionBranch.branchType === BranchType.FEATURE || configuration.versionBranch.branchType === BranchType.PRERELEASE) {
           releaseTagPostfix = ['--tag', configuration.versionBranch.name];
         }
-        execCapture('yarn', ['npm', 'publish', ...releaseTagPostfix], workspace.cwd);
-      })
-      await Promise.all(publishCommands);
+        report.reportInfo(MessageName.UNNAMED, `Publishing ${structUtils.stringifyIdent(workspace.locator)}`)
+        await execCapture('yarn', ['npm', 'publish', ...releaseTagPostfix], workspace.cwd);
+      }
 
       const publishedVersion : PublishedVersion = {
         ... await this.readChangeLog(project.topLevelWorkspace),
