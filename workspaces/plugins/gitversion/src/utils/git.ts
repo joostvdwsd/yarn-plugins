@@ -17,7 +17,7 @@ export async function tag(tagName: string, push: boolean) {
   await execCapture('git', ['tag', tagName]);
 
   if (push) {
-    return execCapture('git', ['push', 'origin', tagName]);
+    return execCapture('git', ['push', '--no-verify', 'origin', tagName]);
   }
 }
 
