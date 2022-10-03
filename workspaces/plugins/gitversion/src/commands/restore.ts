@@ -1,5 +1,5 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Configuration, Locator, Project, Workspace } from "@yarnpkg/core";
+import { Configuration, Locator, MessageName, Project, Report, Workspace } from "@yarnpkg/core";
 import { GitVersionConfiguration } from "../utils/configuration";
 import { BranchType, GitVersionBranch } from "../types";
 import { execCapture } from "../utils/exec";
@@ -15,11 +15,12 @@ export class GitVersionRestoreCommand extends BaseCommand {
 
   async execute() {
     const configuration = await GitVersionConfiguration.fromContext(this.context);
+    configuration.report.reportInfo(MessageName.UNNAMED, '[RESTORE] Restore versions from git tags')
 
     const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
     if (configuration.independentVersioning) {
-      const promises = project.workspaces.map((workspace) => this.updateWorkspaceFromGit(configuration.versionTagPrefix, configuration.versionBranch, workspace))
+      const promises = project.workspaces.map((workspace) => this.updateWorkspaceFromGit(configuration.versionTagPrefix, configuration.versionBranch, workspace, configuration.report))
       Promise.all(promises);  
     } else {
       const versionPromises = [
@@ -28,13 +29,13 @@ export class GitVersionRestoreCommand extends BaseCommand {
       ];
       const versions = (await Promise.all(versionPromises)).sort(compareVersions).reverse();
       
-      await updateWorkspacesWithVersion(project.workspaces, versions[0])
+      await updateWorkspacesWithVersion(project.workspaces, versions[0], configuration.report)
     }
   }
 
-  async updateWorkspaceFromGit(tagPrefix: string, versionBranch: GitVersionBranch, workspace: Workspace) {
+  async updateWorkspaceFromGit(tagPrefix: string, versionBranch: GitVersionBranch, workspace: Workspace, report: Report) {
     const currentGitVersion = await this.determineCurrentGitVersion(tagPrefix, versionBranch, workspace.locator)
-    return updateWorkspaceWithVersion(workspace, currentGitVersion);
+    return updateWorkspaceWithVersion(workspace, currentGitVersion, report);
   }
 
   /**

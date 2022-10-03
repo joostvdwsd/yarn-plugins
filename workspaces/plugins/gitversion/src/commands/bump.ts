@@ -1,7 +1,9 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Project, Manifest } from "@yarnpkg/core";
+import { MessageName, Project } from "@yarnpkg/core";
+import { updateWorkspacesWithVersion, updateWorkspaceWithVersion } from "../utils";
+import { bump } from "../utils/bump";
+import { changelog } from "../utils/changelog";
 import { GitVersionConfiguration } from "../utils/configuration";
-import { bump } from "../utils/standard-version";
 import { tagPrefix } from "../utils/tags";
 import { GitVersionRestoreCommand } from "./restore";
 
@@ -19,23 +21,26 @@ export class GitVersionBumpCommand extends BaseCommand {
     await restoreCommand.execute();
 
     const configuration = await GitVersionConfiguration.fromContext(this.context);
+    configuration.report.reportInfo(MessageName.UNNAMED, '[BUMP] Bump new version based on conventional commit messages')
 
     const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
     if (configuration.independentVersioning) {
       throw new Error('Not implemented')
     } else {
-      await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace.cwd, project.topLevelWorkspace.cwd);
-      const newManifest = await Manifest.find(project.topLevelWorkspace.cwd);
+      const version = await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, configuration.report);
+      
+      if (version) {
+        await updateWorkspaceWithVersion(project.topLevelWorkspace, version, configuration.report);
+        await updateWorkspacesWithVersion(project.topLevelWorkspace.getRecursiveWorkspaceChildren(), version, configuration.report);
 
-      const newVersion = newManifest.version;
-      if (newVersion) {
-        const workspaceBumps = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map(async (workspace) => {
-          workspace.manifest.version = newVersion;
-          await workspace.persistManifest();
-          return bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), workspace.cwd, project.topLevelWorkspace.cwd, newVersion);
-        });
-        await Promise.all(workspaceBumps);
+        await changelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, configuration.report)
+
+        // const childUpdates = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map((workspace) => {
+        //   return changelog(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project,workspace, configuration.report)
+        // })
+
+        // Promise.all(childUpdates);
       }
     }
   }

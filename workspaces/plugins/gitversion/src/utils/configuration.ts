@@ -1,4 +1,4 @@
-import { CommandContext, Configuration, ConfigurationDefinitionMap, Locator, Project, SettingsType, Workspace } from "@yarnpkg/core";
+import { CommandContext, Configuration, ConfigurationDefinitionMap, Locator, MessageName, Project, Report, SettingsType, StreamReport, Workspace } from "@yarnpkg/core";
 import { UsageError } from "clipanion";
 import { BranchType, GitVersionBranch } from "../types";
 import { currentBranch } from "./git";
@@ -53,24 +53,30 @@ export class GitVersionConfiguration {
     const yarnConfig = await Configuration.find(context.cwd, context.plugins);
     const branch = await currentBranch();
 
-    return new GitVersionConfiguration(yarnConfig, branch);
+    const report = await StreamReport.start({
+      configuration: yarnConfig,
+      includeFooter: false,
+      stdout: context.stdout,
+    }, async report => {
+    });
+
+    return new GitVersionConfiguration(yarnConfig, branch, report);
   }
 
   public readonly featureBranchPatterns: RegExp[];
   public readonly mainBranch: string;
   public readonly independentVersioning: boolean;
   public readonly versionTagPrefix: string;
+  public readonly report : Report;
 
 
   public readonly versionBranch: GitVersionBranch;
   public readonly yarnConfig: Configuration;
 
-  constructor(yarnConfig: Configuration, branchName: string) {
+  constructor(yarnConfig: Configuration, branchName: string, report: Report) {
     this.yarnConfig = yarnConfig;
     const featurePattenStrings = yarnConfig.get('featureBranchPatterns');
-
-    console.log(featurePattenStrings);
-    console.log(branchName);
+    this.report = report;
 
     this.featureBranchPatterns = featurePattenStrings.map((pattern) => new RegExp(pattern));
 
@@ -78,6 +84,9 @@ export class GitVersionConfiguration {
     this.independentVersioning = yarnConfig.get('independentVersioning');
     this.versionTagPrefix = yarnConfig.get('versionTagPrefix');
     this.versionBranch = this.parse(branchName);
+
+    report.reportInfoOnce(MessageName.UNNAMED, `Running on branch: '${branchName}'`);
+    report.reportInfoOnce(MessageName.UNNAMED, `Detected branch type: '${this.versionBranch.branchType}'`);
   }
 
   parse(branchName: string) : GitVersionBranch {

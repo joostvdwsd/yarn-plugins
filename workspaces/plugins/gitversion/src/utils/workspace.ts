@@ -1,12 +1,12 @@
-import { Workspace } from "@yarnpkg/core"
+import { MessageName, Report, structUtils, Workspace } from "@yarnpkg/core"
 
-export async function updateWorkspacesWithVersion(workspaces: Workspace[], version: string) {
-  return Promise.all(workspaces.map((workspace) => updateWorkspaceWithVersion(workspace, version)));
+export async function updateWorkspacesWithVersion(workspaces: Workspace[], version: string, report: Report) {
+  return Promise.all(workspaces.map((workspace) => updateWorkspaceWithVersion(workspace, version, report)));
 }
 
-export async function updateWorkspaceWithVersion(workspace: Workspace, version: string) {
+export async function updateWorkspaceWithVersion(workspace: Workspace, version: string, report: Report) {
   if (workspace.manifest.version !== version) {
-    console.log(`@${workspace.locator.scope}/${workspace.locator.name}`, workspace.manifest.version, '=>', version)
+    report.reportInfo(MessageName.UNNAMED,`${structUtils.stringifyLocator(workspace.locator)} => ${version}`);
     workspace.manifest.version = version
     return workspace.persistManifest()
   }

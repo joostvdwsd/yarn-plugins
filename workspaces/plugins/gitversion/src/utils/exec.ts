@@ -4,7 +4,6 @@ import { PortablePath } from "@yarnpkg/fslib";
 export async function execCapture(command: string, args: string[], cwd?: PortablePath) : Promise<{code: number | null, result: string}> {
 
   return new Promise((resolve, reject) => {
-    console.log('>>>', command, ...args);
     const child = spawn(command, args, {
       cwd: cwd,
     });

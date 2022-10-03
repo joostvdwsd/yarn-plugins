@@ -2,3 +2,5 @@
 .yarn/unplugged
 
 **/lib/**
+
+node_modules
