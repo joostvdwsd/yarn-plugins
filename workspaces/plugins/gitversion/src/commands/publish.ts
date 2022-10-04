@@ -101,8 +101,7 @@ export class GitVersionPublishCommand extends BaseCommand {
         removeMarkdown: false
       })
 
-      currentReleaseChangelog = changeLog.versions.find((versionEntry : any) => versionEntry.version === releasedVersion).body;
-
+      currentReleaseChangelog = changeLog.versions.find((versionEntry : any) => versionEntry.version === releasedVersion)?.body;
     }
     return {
       version: releasedVersion || '0.0.0',
