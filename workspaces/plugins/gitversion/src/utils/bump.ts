@@ -9,6 +9,7 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
 
   const currentVersion = workspace.manifest.version;
   if (!currentVersion) {
+    report.reportWarning(MessageName.UNNAMED, 'No version in manifest. Breaking off')
     return;
   }
 
@@ -18,16 +19,17 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
   
       conventionalRecommendedBump({
         config: config,
-        tagPrefix: tagPrefix
+        tagPrefix: tagPrefix,
+        path: workspace.relativeCwd,
       }, {
           headerPattern: /^(?:Merged PR \d+: )?(\w*)(?:\((.*)\))?!?: (.*)$/,
           breakingHeaderPattern: /^(?:Merged PR \d+: )?(\w*)(?:\((.*)\))?!: (.*)$/,
           revertPattern: /^(?:Merged PR \d+: )?(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w*)\./i,
+          warn: (msg: string) => report.reportWarning(MessageName.UNNAMED, msg)
       } as any, (error, recommendation) => {
-        
-        if (recommendation.releaseType) {          
+        if (recommendation.releaseType) {                    
           if (recommendation.reason) {
-            report.reportInfo(MessageName.UNNAMED, recommendation.reason);
+            report.reportInfo(MessageName.UNNAMED, `${recommendation.reason} => ${recommendation.releaseType}`);
           }
 
           if (versionBranch.branchType == BranchType.MAIN) {
@@ -35,7 +37,12 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
             resolve(semver.inc(currentVersion, recommendation.releaseType) ?? undefined);
           } else {
             report.reportInfo(MessageName.UNNAMED, `Bumping on prerelease ${versionBranch.name}`)
-            resolve(semver.inc(currentVersion, `pre${recommendation.releaseType}`, versionBranch.name) ?? undefined);
+            if (semver.prerelease(currentVersion)) {
+              // run simple prerelease increment when already in prerelease
+              resolve(semver.inc(currentVersion, `prerelease`) ?? undefined);  
+            } else {
+              resolve(semver.inc(currentVersion, `pre${recommendation.releaseType}`, versionBranch.name) ?? undefined);  
+            }
           }
         }
       });

@@ -51,7 +51,7 @@ export async function changelog(versionBranch: GitVersionBranch, newVersion: str
         host: 'unknown'
       }, { 
         merges: null, 
-        path: workspace.cwd 
+        path: workspace.relativeCwd 
       }, {
         headerPattern: /^(?:Merged PR \d+: )?(\w*)(?:\((.*)\))?!?: (.*)$/,
         breakingHeaderPattern: /^(?:Merged PR \d+: )?(\w*)(?:\((.*)\))?!: (.*)$/,
