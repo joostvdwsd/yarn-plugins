@@ -1,9 +1,11 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { MessageName, Project } from "@yarnpkg/core";
+import { Configuration, MessageName, Project, StreamReport } from "@yarnpkg/core";
+import { BranchType } from "../types";
 import { updateWorkspacesWithVersion, updateWorkspaceWithVersion } from "../utils";
 import { bump } from "../utils/bump";
 import { changelog } from "../utils/changelog";
 import { GitVersionConfiguration } from "../utils/configuration";
+import { runStep } from "../utils/report";
 import { tagPrefix } from "../utils/tags";
 import { GitVersionRestoreCommand } from "./restore";
 
@@ -20,28 +22,33 @@ export class GitVersionBumpCommand extends BaseCommand {
     restoreCommand.cli = this.cli;
     await restoreCommand.execute();
 
-    const configuration = await GitVersionConfiguration.fromContext(this.context);
-    configuration.report.reportInfo(MessageName.UNNAMED, '[BUMP] Bump new version based on conventional commit messages')
+    await runStep('Bump versions', this.context, async (report, configuration) => {
 
-    const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
-
-    if (configuration.independentVersioning) {
-      throw new Error('Not implemented')
-    } else {
-      const version = await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, configuration.report);
-      
-      if (version) {
-        await updateWorkspaceWithVersion(project.topLevelWorkspace, version, configuration.report);
-        await updateWorkspacesWithVersion(project.topLevelWorkspace.getRecursiveWorkspaceChildren(), version, configuration.report);
-
-        await changelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, configuration.report)
-
-        // const childUpdates = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map((workspace) => {
-        //   return changelog(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project,workspace, configuration.report)
-        // })
-
-        // Promise.all(childUpdates);
+      if (configuration.versionBranch.branchType === BranchType.UNKNOWN) {
+        report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
+        return;
       }
-    }
+    
+      const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
+
+      if (configuration.independentVersioning) {
+        report.reportError(MessageName.UNNAMED, 'IndependentVersioning is not implemented')
+      } else {
+        const version = await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, report);
+        
+        if (version) {
+          await updateWorkspaceWithVersion(project.topLevelWorkspace, version, report);
+          await updateWorkspacesWithVersion(project.topLevelWorkspace.getRecursiveWorkspaceChildren(), version, report);
+
+          await changelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, report)
+
+          // const childUpdates = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map((workspace) => {
+          //   return changelog(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project,workspace, configuration.report)
+          // })
+
+          // Promise.all(childUpdates);
+        }
+      }
+    });
   }
 }

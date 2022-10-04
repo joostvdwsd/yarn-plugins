@@ -49,36 +49,28 @@ export class GitVersionConfiguration {
     }
   }
 
-  static async fromContext(context: CommandContext)  {
-    const yarnConfig = await Configuration.find(context.cwd, context.plugins);
+  static async fromContext(yarnConfig: Configuration, report: Report)  {
     const branch = await currentBranch();
 
-    const report = await StreamReport.start({
-      configuration: yarnConfig,
-      includeFooter: false,
-      stdout: context.stdout,
-    }, async report => {
-    });
-
-    return new GitVersionConfiguration(yarnConfig, branch, report);
+    return new GitVersionConfiguration(branch, yarnConfig, report);
   }
 
   public readonly featureBranchPatterns: RegExp[];
+  public readonly releaseBranchPatterns: RegExp[];
   public readonly mainBranch: string;
   public readonly independentVersioning: boolean;
   public readonly versionTagPrefix: string;
-  public readonly report : Report;
-
 
   public readonly versionBranch: GitVersionBranch;
   public readonly yarnConfig: Configuration;
 
-  constructor(yarnConfig: Configuration, branchName: string, report: Report) {
+  constructor(branchName: string, yarnConfig: Configuration, report: Report) {
     this.yarnConfig = yarnConfig;
     const featurePattenStrings = yarnConfig.get('featureBranchPatterns');
-    this.report = report;
+    const releaseBranchPatternsStrings = yarnConfig.get('releaseBranchPatterns');
 
     this.featureBranchPatterns = featurePattenStrings.map((pattern) => new RegExp(pattern));
+    this.releaseBranchPatterns = releaseBranchPatternsStrings.map((pattern) => new RegExp(pattern));
 
     this.mainBranch = yarnConfig.get('mainBranch');
     this.independentVersioning = yarnConfig.get('independentVersioning');
@@ -108,6 +100,21 @@ export class GitVersionConfiguration {
           };
         } else {
           throw new UsageError(`The feature pattern '${branchPattern.source}' matched the current branch but it should result in exact 1 group match`);
+        }
+      }
+    }    
+
+    for (let branchPattern of this.releaseBranchPatterns) {
+      if (branchPattern.test(branchName)) {
+        const matches = branchPattern.exec(branchName);
+
+        if (matches && matches.length === 2) {
+          return {
+            name: matches[1],
+            branchType: BranchType.RELEASE
+          };
+        } else {
+          throw new UsageError(`The release pattern '${branchPattern.source}' matched the current branch but it should result in exact 1 group match`);
         }
       }
     }    

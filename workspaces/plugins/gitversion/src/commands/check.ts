@@ -1,6 +1,7 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Project } from "@yarnpkg/core";
+import { Configuration, MessageName, Project, structUtils } from "@yarnpkg/core";
 import { GitVersionConfiguration } from "../utils/configuration";
+import { runStep } from "../utils/report";
 
 export class GitVersionCheckCommand extends BaseCommand {
   static paths = [
@@ -8,21 +9,16 @@ export class GitVersionCheckCommand extends BaseCommand {
   ];
 
   async execute() {
-    const configuration = await GitVersionConfiguration.fromContext(this.context);
-    console.log(configuration.versionBranch);
+    await runStep('Check gitversion plugin', this.context, async (report, configuration) => {
 
-    const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
+      report.reportInfo(MessageName.UNNAMED, `Branch type: ${configuration.versionBranch.branchType}`);
+      report.reportInfo(MessageName.UNNAMED, `Branch name: ${configuration.versionBranch.name}`);
 
-    project.workspaces.forEach((child) => {
-      console.log(child.locator.scope, child.locator.name, child.manifest.private, child.manifest.version)
-    })
+      const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
-
-    // conventionalRecommendedBump({
-      
-    // }, parserOpts, (error, recommendation) => {
-    //   console.log(error, recommendation); // 'major'
-    // })
-
+      project.workspaces.forEach((child) => {
+        report.reportInfo(MessageName.UNNAMED, `${structUtils.stringifyLocator(child.locator)} Private: ${child.manifest.private}`)
+      })
+    });
   }
 }

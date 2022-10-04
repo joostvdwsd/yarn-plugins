@@ -87,10 +87,6 @@ const plugin: Plugin = {
 async function afterPublish(project: Project, branch: GitVersionBranch, publishedVersion: PublishedVersion) {
   const url = project.configuration.get('teamsWebhookUrl');     
   
-  if (!url) {
-    throw new UsageError('teamsWebhookUrl is not set!')
-  }
-
   const titlePostFix = branch.branchType === BranchType.MAIN ? '' : ` on ${branch.name} (${branch.branchType})`;
   let title = `${publishedVersion.packageName} - new release : ${publishedVersion.version}${titlePostFix}`;
 
@@ -113,8 +109,12 @@ async function afterPublish(project: Project, branch: GitVersionBranch, publishe
     // console.log('Starting Request', JSON.stringify(request, null, 2))
     return request
   })
-  const response = await axios.post( url, body);
-  // console.log(response.status, response.data)
+
+  if (url) {
+    const response = await axios.post( url, body);
+  } else {
+    console.log('teamsWebhookUrl not set. Printing card content:\n', body)
+  }
 }
 
 function packageSections(packages: PublishedPackage[], branch: GitVersionBranch) : IMessageCardSection[] {

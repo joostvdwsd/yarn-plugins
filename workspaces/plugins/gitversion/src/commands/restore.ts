@@ -1,11 +1,12 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Configuration, Locator, MessageName, Project, Report, Workspace } from "@yarnpkg/core";
+import { Configuration, Locator, MessageName, Project, Report, StreamReport, Workspace } from "@yarnpkg/core";
 import { GitVersionConfiguration } from "../utils/configuration";
 import { BranchType, GitVersionBranch } from "../types";
 import { execCapture } from "../utils/exec";
 import { currentBranch } from "../utils/git";
 import { tagPrefix } from "../utils/tags";
 import { updateWorkspacesWithVersion, updateWorkspaceWithVersion } from "../utils/workspace";
+import { runStep } from "../utils/report";
 const compareVersions = require('compare-versions');
 
 export class GitVersionRestoreCommand extends BaseCommand {
@@ -14,23 +15,27 @@ export class GitVersionRestoreCommand extends BaseCommand {
   ];
 
   async execute() {
-    const configuration = await GitVersionConfiguration.fromContext(this.context);
-    configuration.report.reportInfo(MessageName.UNNAMED, '[RESTORE] Restore versions from git tags')
+    await runStep('Restore versions from git tags', this.context, async (report, configuration) => {
+      if (configuration.versionBranch.branchType === BranchType.UNKNOWN) {
+        report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
+        return;
+      }
+    
+      const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
-    const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
-
-    if (configuration.independentVersioning) {
-      const promises = project.workspaces.map((workspace) => this.updateWorkspaceFromGit(configuration.versionTagPrefix, configuration.versionBranch, workspace, configuration.report))
-      Promise.all(promises);  
-    } else {
-      const versionPromises = [
-        this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch),
-        ...project.workspaces.map((workspace) => this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, workspace.locator))
-      ];
-      const versions = (await Promise.all(versionPromises)).sort(compareVersions).reverse();
-      
-      await updateWorkspacesWithVersion(project.workspaces, versions[0], configuration.report)
-    }
+      if (configuration.independentVersioning) {
+        const promises = project.workspaces.map((workspace) => this.updateWorkspaceFromGit(configuration.versionTagPrefix, configuration.versionBranch, workspace, report))
+        Promise.all(promises);  
+      } else {
+        const versionPromises = [
+          this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch),
+          ...project.workspaces.map((workspace) => this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, workspace.locator))
+        ];
+        const versions = (await Promise.all(versionPromises)).sort(compareVersions).reverse();
+        
+        await updateWorkspacesWithVersion(project.workspaces, versions[0], report)
+      }
+    });
   }
 
   async updateWorkspaceFromGit(tagPrefix: string, versionBranch: GitVersionBranch, workspace: Workspace, report: Report) {

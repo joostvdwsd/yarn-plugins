@@ -1,6 +1,7 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Configuration, MessageName, Project } from "@yarnpkg/core";
+import { Configuration, MessageName, Project, StreamReport } from "@yarnpkg/core";
 import { DEFAULT_REPO_VERSION, GitVersionConfiguration } from "../utils/configuration";
+import { runStep } from "../utils/report";
 import { updateWorkspacesWithVersion } from "../utils/workspace";
 
 export class GitVersionResetCommand extends BaseCommand {
@@ -9,11 +10,10 @@ export class GitVersionResetCommand extends BaseCommand {
   ];
 
   async execute() {
-    const configuration = await GitVersionConfiguration.fromContext(this.context);
-    configuration.report.reportInfo(MessageName.UNNAMED, '[RESET] Reset source versions to 0.0.0')
+    await runStep('Resetting file versions', this.context, async (report, configuration) => {
+      const {project} = await Project.find(configuration.yarnConfig, this.context.cwd);
 
-    const {project} = await Project.find(configuration.yarnConfig, this.context.cwd);
-
-    await updateWorkspacesWithVersion(project.workspaces, DEFAULT_REPO_VERSION, configuration.report);
+      await updateWorkspacesWithVersion(project.workspaces, DEFAULT_REPO_VERSION, report);
+    });
   }
 }
