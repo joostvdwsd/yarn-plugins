@@ -46,7 +46,7 @@ export class GitVersionPackCommand extends BaseCommand {
           }
           report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
 
-          await execCapture('yarn', ['pack', '-o', join(packFolder, `${structUtils.stringifyIdent(workspace.locator)}-${workspace.manifest.version}.tgz`)], workspace.cwd);
+          await execCapture('yarn', ['pack', '-o', join(packFolder, `${workspace.locator.scope ? workspace.locator.scope + '-' : ''}${workspace.locator.name}-${workspace.manifest.version}.tgz`)], workspace.cwd);
         }
 
         const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
