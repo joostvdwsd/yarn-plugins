@@ -3,7 +3,6 @@ import { execUtils, MessageName, Project, structUtils, Workspace } from "@yarnpk
 import { BranchType, PublishedPackage, PublishedVersion } from "../types";
 
 import { join, join as pjoin } from 'path';
-import { execCapture } from "../utils/exec";
 import { existsSync } from "fs";
 import { Option } from "clipanion";
 import { runStep } from "../utils/report";
