@@ -27,6 +27,7 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
           revertPattern: /^(?:Merged PR \d+: )?(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w*)\./i,
           warn: (msg: string) => report.reportWarning(MessageName.UNNAMED, msg)
       } as any, (error, recommendation) => {
+        report.reportJson(recommendation)
         if (recommendation.releaseType) {                    
           if (recommendation.reason) {
             report.reportInfo(MessageName.UNNAMED, `${recommendation.reason} => ${recommendation.releaseType}`);
