@@ -44,6 +44,18 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
               resolve(semver.inc(currentVersion, `pre${recommendation.releaseType}`, versionBranch.name) ?? undefined);  
             }
           }
+        } else {
+          report.reportInfo(MessageName.UNNAMED, 'No recommendation found')
+          if (versionBranch.branchType != BranchType.MAIN) {
+            report.reportInfo(MessageName.UNNAMED, `Bumping on prerelease ${versionBranch.name}`)
+            if (semver.prerelease(currentVersion)) {
+              // run simple prerelease increment when already in prerelease
+              resolve(semver.inc(currentVersion, `prerelease`) ?? undefined);  
+            } else {
+              resolve(semver.inc(currentVersion, `prepatch`, versionBranch.name) ?? undefined);  
+            }
+          }
+
         }
       });
     } catch(error) {
