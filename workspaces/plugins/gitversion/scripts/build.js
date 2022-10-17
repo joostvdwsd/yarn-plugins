@@ -2,6 +2,7 @@ const {build} = require('esbuild');
 const { pnpPlugin } = require('@yarnpkg/esbuild-plugin-pnp');
 const { join, dirname } = require('path');
 const { getDynamicLibs } = require('@yarnpkg/cli');
+const inlineImportPlugin = require('esbuild-plugin-inline-import');
 
 const pathRegExp = /^(?![a-zA-Z]:[\\/]|\\\\|\.{0,2}(?:\/|$))((?:@[^/]+\/)?[^/]+)\/*(.*|)$/;
 const name = '@yarnpkg/plugin-gitversion';
@@ -105,11 +106,11 @@ const res = await build({
   format: `iife`,
   platform: `node`,
   plugins: [
+    inlineImportPlugin(),
     templatePlugin,
     testPlugin,
     dynamicLibResolver,
     pnpPlugin(),
-    
   ],
   minify: true,
   sourcemap: false,//'inline',

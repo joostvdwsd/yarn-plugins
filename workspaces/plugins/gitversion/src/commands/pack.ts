@@ -8,6 +8,10 @@ import { existsSync } from "fs";
 import { Option } from "clipanion";
 import { runStep } from "../utils/report";
 import { mkdir, writeFile } from "fs/promises";
+
+// @ts-ignore
+import gitversionPublishJavascript from 'inline:../../res/gitversion.publish.js';
+
 const parseChangelog = require("changelog-parser");
 
 export class GitVersionPackCommand extends BaseCommand {
@@ -60,14 +64,16 @@ export class GitVersionPackCommand extends BaseCommand {
 
         const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
 
-        await writeFile(join(packFolder, 'changelog.diff.patch'), diff.result);
+        await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.result);
 
         const configContent = JSON.stringify({
           versionTag: configuration.versionBranch.name,
           version: project.topLevelWorkspace.manifest.version,
+          gitTagName: `${configuration.versionTagPrefix}${project.topLevelWorkspace.manifest.version}`,
           packages: publicWorkspaces.map((workspace) => this.workspacePackageName(workspace))
         })
         await writeFile(join(packFolder, 'gitversion.config.json'), configContent, 'utf-8');
+        await writeFile(join(packFolder, 'gitversion.publish.js'), gitversionPublishJavascript, 'utf-8');
       }
     });
   }

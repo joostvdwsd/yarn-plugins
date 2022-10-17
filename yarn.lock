@@ -108,6 +108,7 @@ __metadata:
     conventional-recommended-bump: "npm:^6.1.0"
     esbuild: "npm:^0.15.10"
     esbuild-plugin-hbs: "npm:^0.0.3"
+    esbuild-plugin-inline-import: "npm:^1.0.1"
     semver: "npm:^7.3.7"
     typescript: "npm:^4.7.4"
   languageName: unknown
@@ -1896,6 +1897,13 @@ __metadata:
   dependencies:
     jsdom: "npm:^19.0.0"
   checksum: c17999cb56ba49e167aa4edbce55bc7a9d621a09440c376ec95a6577350cb4ba5043f88d1ce9732d907f6ad3e8d7bf9ced34a38ff9d11a7c5913cf77cbed7375
+  languageName: node
+  linkType: hard
+
+"esbuild-plugin-inline-import@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "esbuild-plugin-inline-import@npm:1.0.1"
+  checksum: 99f374041487c070e1a965aa94f2822084c6748a67bf27ae118290d52f098f38c7e5716ad73b10e29a225ed5b8b68c15dbcadc4301319c676340082d0e46dfe1
   languageName: node
   linkType: hard
 

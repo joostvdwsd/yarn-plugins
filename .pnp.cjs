@@ -163,6 +163,7 @@ const RAW_RUNTIME_STATE =
           ["conventional-recommended-bump", "npm:6.1.0"],\
           ["esbuild", "npm:0.15.10"],\
           ["esbuild-plugin-hbs", "npm:0.0.3"],\
+          ["esbuild-plugin-inline-import", "npm:1.0.1"],\
           ["semver", "npm:7.3.7"],\
           ["typescript", "patch:typescript@npm%3A4.7.4#optional!builtin<compat/typescript>::version=4.7.4&hash=701156"]\
         ],\
@@ -2489,6 +2490,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["esbuild-plugin-hbs", "npm:0.0.3"],\
           ["jsdom", "virtual:0e4e6fab37249c2d2828aca5bcb0fef8c04c42e4478bfa9423dd96778b816bf046ee8e19afcdd9663e103904bb1e4567add9fd7e5f5aee1b031f4e1e7d0e85e6#npm:19.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["esbuild-plugin-inline-import", [\
+      ["npm:1.0.1", {\
+        "packageLocation": "../../.yarn/berry/cache/esbuild-plugin-inline-import-npm-1.0.1-f60ff9245d-9.zip/node_modules/esbuild-plugin-inline-import/",\
+        "packageDependencies": [\
+          ["esbuild-plugin-inline-import", "npm:1.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
