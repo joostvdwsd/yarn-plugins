@@ -15,8 +15,8 @@
     "semver": "^7.3.7"
   },
   "scripts": {
-    "build": "builder build plugin --source-map && tsc --build && yarn move",
-    "build2": "yarn node ./scripts/build.js && tsc --build && yarn move",
+    "build3": "builder build plugin --source-map && tsc --build && yarn move",
+    "build": "yarn node ./scripts/build.js && tsc --build && yarn move",
     "check": "tsc --noEmit",
     "move": "cp bundles/@yarnpkg/plugin-gitversion.js ../../../dist/gitversion.js"
   },

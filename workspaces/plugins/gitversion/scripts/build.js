@@ -101,7 +101,7 @@ const res = await build({
   ],
   bundle: true,
   outfile: join(__dirname, '..', 'bundles', '@yarnpkg', 'plugin-gitversion.js'),
-  logLevel: `silent`,
+  logLevel: `info`,
   format: `iife`,
   platform: `node`,
   plugins: [
