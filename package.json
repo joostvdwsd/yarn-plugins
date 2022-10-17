@@ -18,5 +18,10 @@
   },
   "engines": {
     "node": ">=0.10.3 <11"
+  },
+  "dependenciesMeta": {
+    "conventional-changelog-conventionalcommits@5.0.0": {
+      "unplugged": true
+    }
   }
 }

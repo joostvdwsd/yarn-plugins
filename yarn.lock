@@ -4477,6 +4477,9 @@ __metadata:
     conventional-changelog-angular: "npm:^5.0.13"
     standard-version: "npm:^9.5.0"
     typescript: "npm:^4.7.4"
+  dependenciesMeta:
+    conventional-changelog-conventionalcommits@5.0.0:
+      unplugged: true
   languageName: unknown
   linkType: soft
 

@@ -1853,7 +1853,7 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }],\
       ["npm:5.0.0", {\
-        "packageLocation": "../../.yarn/berry/cache/conventional-changelog-conventionalcommits-npm-5.0.0-a270202fe8-9.zip/node_modules/conventional-changelog-conventionalcommits/",\
+        "packageLocation": "./.yarn/unplugged/conventional-changelog-conventionalcommits-npm-5.0.0-a270202fe8/node_modules/conventional-changelog-conventionalcommits/",\
         "packageDependencies": [\
           ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
           ["compare-func", "npm:2.0.0"],\

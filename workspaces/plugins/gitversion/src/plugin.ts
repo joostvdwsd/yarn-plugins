@@ -7,6 +7,7 @@ import { GitVersionPublishCommand } from './commands/publish';
 import { GitVersionCheckCommand } from './commands/check';
 import { GitVersionTagCommand } from './commands/tag';
 import { GitVersionCommitCommand } from './commands/commit';
+import { GitVersionPackCommand } from './commands/pack';
 
 
 export const plugin: Plugin = {
@@ -19,6 +20,7 @@ export const plugin: Plugin = {
     GitVersionTagCommand,
     GitVersionCommitCommand,
     GitVersionPublishCommand,
+    GitVersionPackCommand,
   ],
   hooks: {
     async wrapNetworkRequest(_executor: () => Promise<any>, extra: WrapNetworkRequestInfo) {
