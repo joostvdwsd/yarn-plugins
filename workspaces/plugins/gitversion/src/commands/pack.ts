@@ -67,9 +67,11 @@ export class GitVersionPackCommand extends BaseCommand {
 
           try {
             report.reportInfo(MessageName.UNNAMED, 'Generating changelog');
-            const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
+            const diff = await execUtils.execvp('git', ['diff', '--', '*CHANGELOG.md'], {
+              cwd: project.cwd
+            });
 
-            await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.result);
+            await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.stdout);
           } catch (error) {
             report.reportWarning(MessageName.UNNAMED, `Error generating changelog diff: '${error}'`);
           }
