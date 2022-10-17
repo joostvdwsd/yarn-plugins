@@ -164,6 +164,7 @@ const RAW_RUNTIME_STATE =
           ["esbuild", "npm:0.15.10"],\
           ["esbuild-plugin-hbs", "npm:0.0.3"],\
           ["esbuild-plugin-inline-import", "npm:1.0.1"],\
+          ["p-queue", "npm:7.3.0"],\
           ["semver", "npm:7.3.7"],\
           ["typescript", "patch:typescript@npm%3A4.7.4#optional!builtin<compat/typescript>::version=4.7.4&hash=701156"]\
         ],\
@@ -2607,6 +2608,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["eventemitter3", [\
+      ["npm:4.0.7", {\
+        "packageLocation": "../../.yarn/berry/cache/eventemitter3-npm-4.0.7-7afcdd74ae-9.zip/node_modules/eventemitter3/",\
+        "packageDependencies": [\
+          ["eventemitter3", "npm:4.0.7"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["fast-glob", [\
       ["npm:3.2.11", {\
         "packageLocation": "../../.yarn/berry/cache/fast-glob-npm-3.2.11-bc01135fef-9.zip/node_modules/fast-glob/",\
@@ -3950,6 +3960,26 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["p-locate", "npm:5.0.0"],\
           ["p-limit", "npm:3.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["p-queue", [\
+      ["npm:7.3.0", {\
+        "packageLocation": "../../.yarn/berry/cache/p-queue-npm-7.3.0-ad6f2467da-9.zip/node_modules/p-queue/",\
+        "packageDependencies": [\
+          ["p-queue", "npm:7.3.0"],\
+          ["eventemitter3", "npm:4.0.7"],\
+          ["p-timeout", "npm:5.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["p-timeout", [\
+      ["npm:5.1.0", {\
+        "packageLocation": "../../.yarn/berry/cache/p-timeout-npm-5.1.0-11ca554b60-9.zip/node_modules/p-timeout/",\
+        "packageDependencies": [\
+          ["p-timeout", "npm:5.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\

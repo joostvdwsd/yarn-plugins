@@ -9,8 +9,11 @@ import { Option } from "clipanion";
 import { runStep } from "../utils/report";
 import { mkdir, writeFile } from "fs/promises";
 
+import PQueue from 'p-queue';
+
 // @ts-ignore
 import gitversionPublishJavascript from 'inline:../../res/gitversion.publish.js';
+import { cpus } from "os";
 
 const parseChangelog = require("changelog-parser");
 
@@ -46,16 +49,17 @@ export class GitVersionPackCommand extends BaseCommand {
           })
 
           const commands = publicWorkspaces.map((workspace) => {
-            let releaseTagPostfix : string[] = [];
-            if (configuration.versionBranch.branchType === BranchType.FEATURE || configuration.versionBranch.branchType === BranchType.PRERELEASE) {
-              releaseTagPostfix = ['--tag', configuration.versionBranch.name];
-            }
             report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
-
             return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);
-          })
+          });
 
           if (this.parallel) {
+            const queue = new PQueue({
+              concurrency: cpus().length
+            })
+            commands.forEach((command) => {
+              queue.add(() => command);
+            })
             await Promise.all(commands);
           } else {
             for (let command of commands) {
