@@ -47,7 +47,7 @@ export class GitVersionPackCommand extends BaseCommand {
           }
           report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
 
-          return execCapture('yarn', ['pack', '-o', join(packFolder, `${workspace.locator.scope ? workspace.locator.scope + '-' : ''}${workspace.locator.name}-${workspace.manifest.version}.tgz`)], workspace.cwd);
+          return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);
         })
 
         if (this.parallel) {
@@ -65,15 +65,15 @@ export class GitVersionPackCommand extends BaseCommand {
         const configContent = JSON.stringify({
           versionTag: configuration.versionBranch.name,
           version: project.topLevelWorkspace.manifest.version,
-          packages: publicWorkspaces.map((workspace) => {
-            return {
-
-            }
-          })
+          packages: publicWorkspaces.map((workspace) => this.workspacePackageName(workspace))
         })
         await writeFile(join(packFolder, 'gitversion.config.json'), configContent, 'utf-8');
       }
     });
+  }
+
+  workspacePackageName(workspace: Workspace) {
+    return `${workspace.locator.scope ? workspace.locator.scope + '-' : ''}${workspace.locator.name}-${workspace.manifest.version}.tgz`
   }
 
   async readChangeLog(workspace: Workspace) : Promise<PublishedPackage> {
