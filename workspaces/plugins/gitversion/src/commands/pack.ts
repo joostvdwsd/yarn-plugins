@@ -1,5 +1,5 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { MessageName, Project, structUtils, Workspace } from "@yarnpkg/core";
+import { execUtils, MessageName, Project, structUtils, Workspace } from "@yarnpkg/core";
 import { BranchType, PublishedPackage, PublishedVersion } from "../types";
 
 import { join, join as pjoin } from 'path';
@@ -52,9 +52,15 @@ export class GitVersionPackCommand extends BaseCommand {
             concurrency: cpus().length
           })
           publicWorkspaces.forEach((workspace) => {
-            queue.add(() => {
-              report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
-              return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);  
+            queue.add(async () => {
+              try {
+                report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
+                await execUtils.execvp('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], {
+                  cwd: workspace.cwd,
+                })
+              } catch (error) {
+                throw error;
+              }
             });
           });
           await queue.onEmpty();
