@@ -48,24 +48,16 @@ export class GitVersionPackCommand extends BaseCommand {
             recursive: true
           })
 
-          const commands = publicWorkspaces.map((workspace) => {
+          const queue = new PQueue({
+            concurrency: cpus().length
+          })
+          publicWorkspaces.forEach((workspace) => {
+            queue.add(() => {
+              report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
+              return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);  
+            });
           });
-
-          if (this.parallel) {
-            const queue = new PQueue({
-              concurrency: cpus().length
-            })
-            publicWorkspaces.forEach((workspace) => {
-              queue.add(() => {
-                report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
-                return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);  
-              })
-            })
-          } else {
-            for (let command of commands) {
-              await command;
-            }
-          }
+          await queue.onEmpty();
 
           try {
             report.reportInfo(MessageName.UNNAMED, 'Generating changelog');
