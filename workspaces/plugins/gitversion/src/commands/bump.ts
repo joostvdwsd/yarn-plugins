@@ -1,5 +1,6 @@
 import { BaseCommand } from "@yarnpkg/cli";
 import { Configuration, MessageName, Project, StreamReport } from "@yarnpkg/core";
+import { Option } from "clipanion";
 import { BranchType } from "../types";
 import { updateWorkspacesWithVersion, updateWorkspaceWithVersion } from "../utils";
 import { bump } from "../utils/bump";

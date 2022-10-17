@@ -16,6 +16,7 @@ export class GitVersionPackCommand extends BaseCommand {
   ];
 
   outputFolder = Option.String('Output folder', 'gitversion-package');
+  parallel = Option.Boolean('--parallel', true);
 
   async execute() {
 
@@ -39,14 +40,22 @@ export class GitVersionPackCommand extends BaseCommand {
           recursive: true
         })
 
-        for (const workspace of publicWorkspaces) {
+        const commands = publicWorkspaces.map((workspace) => {
           let releaseTagPostfix : string[] = [];
           if (configuration.versionBranch.branchType === BranchType.FEATURE || configuration.versionBranch.branchType === BranchType.PRERELEASE) {
             releaseTagPostfix = ['--tag', configuration.versionBranch.name];
           }
           report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
 
-          await execCapture('yarn', ['pack', '-o', join(packFolder, `${workspace.locator.scope ? workspace.locator.scope + '-' : ''}${workspace.locator.name}-${workspace.manifest.version}.tgz`)], workspace.cwd);
+          return execCapture('yarn', ['pack', '-o', join(packFolder, `${workspace.locator.scope ? workspace.locator.scope + '-' : ''}${workspace.locator.name}-${workspace.manifest.version}.tgz`)], workspace.cwd);
+        })
+
+        if (this.parallel) {
+          await Promise.all(commands);
+        } else {
+          for (let command of commands) {
+            await command;
+          }
         }
 
         const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
@@ -55,7 +64,12 @@ export class GitVersionPackCommand extends BaseCommand {
 
         const configContent = JSON.stringify({
           versionTag: configuration.versionBranch.name,
-          version: project.topLevelWorkspace.manifest.version
+          version: project.topLevelWorkspace.manifest.version,
+          packages: publicWorkspaces.map((workspace) => {
+            return {
+
+            }
+          })
         })
         await writeFile(join(packFolder, 'gitversion.config.json'), configContent, 'utf-8');
       }
