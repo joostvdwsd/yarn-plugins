@@ -16,7 +16,8 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
   return new Promise(async (resolve, reject) => {
     try {
       const config = await loadConfig(project);
-  
+      report.reportInfo(MessageName.UNNAMED, 'Running bump')
+
       conventionalRecommendedBump({
         config: config,
         tagPrefix: tagPrefix,
