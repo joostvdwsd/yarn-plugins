@@ -64,6 +64,7 @@ export class GitVersionPackCommand extends BaseCommand {
           }
 
           try {
+            report.reportInfo(MessageName.UNNAMED, 'Generating changelog');
             const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
 
             await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.result);
@@ -71,6 +72,7 @@ export class GitVersionPackCommand extends BaseCommand {
             report.reportWarning(MessageName.UNNAMED, `Error generating changelog diff: '${error}'`);
           }
 
+          report.reportInfo(MessageName.UNNAMED, 'Generating config');
           const configContent = JSON.stringify({
             versionTag: configuration.versionBranch.name,
             version: project.topLevelWorkspace.manifest.version,
@@ -78,6 +80,7 @@ export class GitVersionPackCommand extends BaseCommand {
             packages: publicWorkspaces.map((workspace) => this.workspacePackageName(workspace))
           })
           await writeFile(join(packFolder, 'gitversion.config.json'), configContent, 'utf-8');
+          report.reportInfo(MessageName.UNNAMED, 'Writing deploy script');
           await writeFile(join(packFolder, 'gitversion.publish.js'), gitversionPublishJavascript, 'utf-8');
         }
       } catch (error) {
