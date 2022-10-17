@@ -15,6 +15,7 @@ export async function bump(versionBranch: GitVersionBranch, tagPrefix: string, p
 
   return new Promise(async (resolve, reject) => {
     try {
+      report.reportInfo(MessageName.UNNAMED, 'Running bump1')
       const config = await loadConfig(project);
       report.reportInfo(MessageName.UNNAMED, 'Running bump')
 
