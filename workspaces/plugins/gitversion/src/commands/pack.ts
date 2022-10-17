@@ -62,9 +62,13 @@ export class GitVersionPackCommand extends BaseCommand {
           }
         }
 
-        const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
+        try {
+          const diff = await execCapture('git', ['diff', '--', '*CHANGELOG.md'], project.cwd);
 
-        await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.result);
+          await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.result);
+        } catch (error) {
+          report.reportWarning(MessageName.UNNAMED, `Error generating changelog: '${error}'`)
+        }
 
         const configContent = JSON.stringify({
           versionTag: configuration.versionBranch.name,
