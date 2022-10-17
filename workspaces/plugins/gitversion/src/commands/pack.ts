@@ -49,18 +49,18 @@ export class GitVersionPackCommand extends BaseCommand {
           })
 
           const commands = publicWorkspaces.map((workspace) => {
-            report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
-            return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);
           });
 
           if (this.parallel) {
             const queue = new PQueue({
               concurrency: cpus().length
             })
-            commands.forEach((command) => {
-              queue.add(() => command);
+            publicWorkspaces.forEach((workspace) => {
+              queue.add(() => {
+                report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
+                return execCapture('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], workspace.cwd);  
+              })
             })
-            await Promise.all(commands);
           } else {
             for (let command of commands) {
               await command;
