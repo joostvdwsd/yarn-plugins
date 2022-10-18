@@ -100,6 +100,7 @@ __metadata:
     "@yarnpkg/core": "npm:^3"
     "@yarnpkg/esbuild-plugin-pnp": "npm:^3.0.0-rc.15"
     "@yarnpkg/fslib": "npm:^2.5"
+    "@yarnpkg/plugin-npm": "npm:^3.0.0-rc.25"
     changelog-parser: "npm:^2.8.1"
     clipanion: "npm:^3.2.0-rc.10"
     compare-versions: "npm:^4.1.3"
@@ -111,6 +112,7 @@ __metadata:
     esbuild-plugin-inline-import: "npm:^1.0.1"
     p-queue: "npm:^7.3.0"
     semver: "npm:^7.3.7"
+    typanion: "npm:^3.12.0"
     typescript: "npm:^4.7.4"
   languageName: unknown
   linkType: soft
@@ -500,6 +502,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@yarnpkg/fslib@npm:^3.0.0-rc.25":
+  version: 3.0.0-rc.25
+  resolution: "@yarnpkg/fslib@npm:3.0.0-rc.25"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 0132c76a34c1a98834f57fb0503253205a4ae6786d6ec3be45549b4e6614832d7a714388059fe6649a05c42b6dbc6ee88a82d913eca4c4c81a3ce028a4d5bbcb
+  languageName: node
+  linkType: hard
+
 "@yarnpkg/json-proxy@npm:^2.1.1":
   version: 2.1.1
   resolution: "@yarnpkg/json-proxy@npm:2.1.1"
@@ -722,6 +733,22 @@ __metadata:
     "@yarnpkg/core": ^3.2.1
     "@yarnpkg/plugin-pack": ^3.1.2
   checksum: 314d3344709c64c289830246a0ad3d46d0129d12f38c5121ebd9cea32a97ca637bea550194d0c80ce94dd7c8a429b820b8959a14eb307706df6d1ea52806235d
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/plugin-npm@npm:^3.0.0-rc.25":
+  version: 3.0.0-rc.25
+  resolution: "@yarnpkg/plugin-npm@npm:3.0.0-rc.25"
+  dependencies:
+    "@yarnpkg/fslib": "npm:^3.0.0-rc.25"
+    enquirer: "npm:^2.3.6"
+    semver: "npm:^7.1.2"
+    ssri: "npm:^6.0.1"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    "@yarnpkg/core": ^4.0.0-rc.25
+    "@yarnpkg/plugin-pack": ^4.0.0-rc.25
+  checksum: 531670887f410976b86768995b54f6218f8b492e177a9578752b50ed8131700f330db476a6c9b07cd5262b3e1cc10f52f9e9a6c907cad779eae6ea4150cb3a68
   languageName: node
   linkType: hard
 
@@ -4217,6 +4244,13 @@ __metadata:
   version: 0.0.6
   resolution: "tunnel@npm:0.0.6"
   checksum: 4b6009e1ed9c1857d58462867cd731f4af255c0406fc982dd0a17735c5c991293bc57a8c0957c5f51dfc3778baa280e399d3e05f1ca4aaf7442349c529b7c89d
+  languageName: node
+  linkType: hard
+
+"typanion@npm:^3.12.0":
+  version: 3.12.0
+  resolution: "typanion@npm:3.12.0"
+  checksum: 02a2b2ae4bdd4141d116395f2aca20d13bf841e60f0679e48af13f328017a38d4fd1257daa93718950843c61c61341d843804254246b34afdfb731d5007c5cd3
   languageName: node
   linkType: hard
 

@@ -1,5 +1,5 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { execUtils, MessageName, Project, structUtils, Workspace } from "@yarnpkg/core";
+import { execUtils, MessageName, Project, Report, structUtils, Workspace } from "@yarnpkg/core";
 import { BranchType, PublishedPackage, PublishedVersion } from "../types";
 
 import { join, join as pjoin } from 'path';
@@ -11,8 +11,9 @@ import { mkdir, writeFile } from "fs/promises";
 import PQueue from 'p-queue';
 
 // @ts-ignore
-import gitversionPublishJavascript from 'inline:../../res/gitversion.publish.js';
 import { cpus } from "os";
+import { CONFIG_FILE, PrepublishedPackageConfig, prepublishedPackageName } from "../utils/prepublished-packages";
+import * as t from 'typanion';
 
 const parseChangelog = require("changelog-parser");
 
@@ -22,7 +23,10 @@ export class GitVersionPackCommand extends BaseCommand {
   ];
 
   outputFolder = Option.String('Output folder', 'gitversion-package');
-  parallel = Option.Boolean('--parallel', true);
+  maxConcurrency = Option.String(`-m,--max-concurrency`, {
+    description: `is the maximum number of jobs that can run at a time, defaults to the number of logical CPUs on the current machine.`,
+    validator: t.isNumber()
+  });
 
   async execute() {
 
@@ -45,24 +49,14 @@ export class GitVersionPackCommand extends BaseCommand {
           const packFolder = join(project.cwd, this.outputFolder)
           await mkdir(packFolder, {
             recursive: true
-          })
+          });
 
           const queue = new PQueue({
-            concurrency: cpus().length
+            concurrency: this.maxConcurrency ? this.maxConcurrency : cpus().length
           })
-          publicWorkspaces.forEach((workspace) => {
-            queue.add(async () => {
-              try {
-                report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
-                await execUtils.execvp('yarn', ['pack', '-o', join(packFolder, this.workspacePackageName(workspace))], {
-                  cwd: workspace.cwd,
-                })
-              } catch (error) {
-                throw error;
-              }
-            });
-          });
-          await queue.onEmpty();
+
+          queue.addAll(publicWorkspaces.map((workspace) => this.execPackCommand(workspace, report, packFolder)));
+          await queue.onIdle();
 
           try {
             report.reportInfo(MessageName.UNNAMED, 'Generating changelog');
@@ -77,14 +71,10 @@ export class GitVersionPackCommand extends BaseCommand {
 
           report.reportInfo(MessageName.UNNAMED, 'Generating config');
           const configContent = JSON.stringify({
-            versionTag: configuration.versionBranch.name,
+            versionBranch: configuration.versionBranch.name,
             version: project.topLevelWorkspace.manifest.version,
-            gitTagName: `${configuration.versionTagPrefix}${project.topLevelWorkspace.manifest.version}`,
-            packages: publicWorkspaces.map((workspace) => this.workspacePackageName(workspace))
-          })
-          await writeFile(join(packFolder, 'gitversion.config.json'), configContent, 'utf-8');
-          report.reportInfo(MessageName.UNNAMED, 'Writing deploy script');
-          await writeFile(join(packFolder, 'gitversion.publish.js'), gitversionPublishJavascript, 'utf-8');
+          } as PrepublishedPackageConfig)
+          await writeFile(join(packFolder, CONFIG_FILE), configContent, 'utf-8');
         }
       } catch (error) {
         throw error;
@@ -92,8 +82,13 @@ export class GitVersionPackCommand extends BaseCommand {
     });
   }
 
-  workspacePackageName(workspace: Workspace) {
-    return `${workspace.locator.scope ? workspace.locator.scope + '-' : ''}${workspace.locator.name}-${workspace.manifest.version}.tgz`
+  execPackCommand(workspace: Workspace, report: Report, packFolder: string) {
+    return async () => {
+      report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
+      await execUtils.execvp('yarn', ['pack', '-o', join(packFolder, prepublishedPackageName(workspace))], {
+        cwd: workspace.cwd,
+      })
+    }
   }
 
   async readChangeLog(workspace: Workspace) : Promise<PublishedPackage> {
