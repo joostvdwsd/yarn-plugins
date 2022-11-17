@@ -27,7 +27,10 @@ export class GitVersionPublishPackedCommand extends BaseCommand {
   packageFolder = Option.String('Output folder', 'gitversion-package');
   maxConcurrency = Option.String(`-m,--max-concurrency`, {
     description: `is the maximum number of jobs that can run at a time, defaults to the number of logical CPUs on the current machine.`,
-    validator: t.isNumber()
+    validator: t.cascade(t.isNumber(), [
+      t.isInteger(),
+      t.isInInclusiveRange(1, 100),
+    ])
   });
 
   dryRun = Option.Boolean('--dryRun', false);
