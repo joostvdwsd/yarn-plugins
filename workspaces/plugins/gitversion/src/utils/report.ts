@@ -1,5 +1,4 @@
 import { CommandContext, Configuration, Report, StreamReport } from "@yarnpkg/core";
-import { report } from "process";
 import { GitVersionConfiguration } from "./configuration";
 
 export async function runStep(name: string, context: CommandContext, cb: (report: Report, configuration: GitVersionConfiguration) => void) {

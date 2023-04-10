@@ -40,7 +40,7 @@ export class GitVersionCommitCommand extends BaseCommand {
           return;
         }
 
-        await addAndCommit(changelogFiles , `chore(release): ${topVersion}`)
+        await addAndCommit(changelogFiles , `chore(release): ${topVersion}`, project.cwd)
       }
     });
   }

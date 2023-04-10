@@ -1,12 +1,10 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Configuration, Locator, MessageName, Project, Report, StreamReport, Workspace } from "@yarnpkg/core";
-import { GitVersionConfiguration } from "../utils/configuration";
+import { Locator, MessageName, Project, Report, Workspace } from "@yarnpkg/core";
 import { BranchType, GitVersionBranch } from "../types";
-import { execCapture } from "../utils/exec";
-import { currentBranch } from "../utils/git";
-import { tagPrefix } from "../utils/tags";
-import { updateWorkspacesWithVersion, updateWorkspaceWithVersion } from "../utils/workspace";
+import { updateWorkspacesVersion, updateWorkspaceVersion } from "../utils/workspace";
 import { runStep } from "../utils/report";
+import { execUtils } from "@yarnpkg/core";
+import { tagPrefix } from "../utils";
 const compareVersions = require('compare-versions');
 
 export class GitVersionRestoreCommand extends BaseCommand {
@@ -28,19 +26,19 @@ export class GitVersionRestoreCommand extends BaseCommand {
         Promise.all(promises);  
       } else {
         const versionPromises = [
-          this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch),
-          ...project.workspaces.map((workspace) => this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, workspace.locator))
+          this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, project),
+          ...project.workspaces.map((workspace) => this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, project, workspace.locator))
         ];
         const versions = (await Promise.all(versionPromises)).sort(compareVersions).reverse();
         
-        await updateWorkspacesWithVersion(project.workspaces, versions[0], report)
+        await updateWorkspacesVersion(project.workspaces, versions[0], report)
       }
     });
   }
 
   async updateWorkspaceFromGit(tagPrefix: string, versionBranch: GitVersionBranch, workspace: Workspace, report: Report) {
-    const currentGitVersion = await this.determineCurrentGitVersion(tagPrefix, versionBranch, workspace.locator)
-    return updateWorkspaceWithVersion(workspace, currentGitVersion, report);
+    const currentGitVersion = await this.determineCurrentGitVersion(tagPrefix, versionBranch, workspace.project, workspace.locator)
+    return updateWorkspaceVersion(workspace, currentGitVersion, report);
   }
 
   /**
@@ -48,7 +46,7 @@ export class GitVersionRestoreCommand extends BaseCommand {
    * @param prerelease (optional) A pre-release suffix.
    * @returns the latest release found in the tag history
    */
-  async determineCurrentGitVersion(defaultTagPrefix: string, versionBranch: GitVersionBranch, childLocator?: Locator): Promise<string> {
+  async determineCurrentGitVersion(defaultTagPrefix: string, versionBranch: GitVersionBranch, project: Project, childLocator?: Locator): Promise<string> {
 
     // filter only tags for this prefix and major version if specified (start with "vNN.").
 
@@ -65,7 +63,7 @@ export class GitVersionRestoreCommand extends BaseCommand {
       prefixFilter,
     ];
 
-    const stdout = (await execCapture('git', listGitTags)).result;
+    const stdout = (await execUtils.execvp('git', listGitTags, { encoding: 'utf8', cwd: project.cwd })).stdout;
 
     let tags = stdout.split('\n');
     const officialTags = tags.filter(x => new RegExp(`^${this.escapeRegExp(fullTagPrefix)}[0-9]+\.[0-9]+\.[0-9]+$`).test(x));

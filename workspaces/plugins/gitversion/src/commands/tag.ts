@@ -33,7 +33,7 @@ export class GitVersionTagCommand extends BaseCommand {
           return;
         }
         
-        await tag(`${configuration.versionTagPrefix}${topVersion}`, this.push)        
+        await tag(`${configuration.versionTagPrefix}${topVersion}`, this.push, project.cwd)        
       }
     });
   }

@@ -3,13 +3,19 @@ const { pnpPlugin } = require('@yarnpkg/esbuild-plugin-pnp');
 const { join, dirname } = require('path');
 const { getDynamicLibs } = require('@yarnpkg/cli');
 const inlineImportPlugin = require('esbuild-plugin-inline-import');
+const { writeFile } = require('fs/promises');
 
 const pathRegExp = /^(?![a-zA-Z]:[\\/]|\\\\|\.{0,2}(?:\/|$))((?:@[^/]+\/)?[^/]+)\/*(.*|)$/;
 const name = '@yarnpkg/plugin-gitversion';
 
+const notDynamic = [
+  'typanion'
+];
+
 const isDynamicLib = (request) => {
-  if (getDynamicLibs().has(request))
-    return true;
+  if (getDynamicLibs().has(request)) {
+    return !notDynamic.includes(request);
+  }
 
   if (request.match(/^@yarnpkg\/plugin-/))
     return true;
@@ -27,7 +33,9 @@ const dynamicLibResolver = {
 
       const [, dependencyName] = dependencyNameMatch;
       if (dependencyName === name || !isDynamicLib(args.path))
+      {
         return undefined;
+      }
 
       return {
         path: args.path,
@@ -47,7 +55,6 @@ let templatePlugin = {
     const originalSource = await fs.promises.readFile(args.path, 'utf-8');
 
     if (originalSource.includes('template.hbs')) {
-
       const fileFolder = dirname(args.path);
       const source1 = originalSource.replace(/readFile\(resolve\(__dirname, '([\w\.\/]+)'\), 'utf-8'\)/g, (content, file) => {
         return '`' + fs.readFileSync(join(fileFolder, file), 'utf-8').replace('`', '\\`') + '`'
@@ -97,6 +104,7 @@ const res = await build({
       `};`,
     ].join(`\n`),
   },
+  metafile: true,
   entryPoints: [
     join(__dirname, '..', 'src/index')
   ],
@@ -116,6 +124,7 @@ const res = await build({
   sourcemap: false,//'inline',
   target: `node14`,
 });
+await writeFile('meta.json', JSON.stringify(res.metafile))
 }
 main().catch((error) => {
   console.log(error);

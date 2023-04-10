@@ -1,4 +1,4 @@
-import { CommandContext, Configuration, ConfigurationDefinitionMap, Locator, MessageName, Project, Report, SettingsType, StreamReport, Workspace } from "@yarnpkg/core";
+import { Configuration, ConfigurationDefinitionMap, MessageName, Report, SettingsType } from "@yarnpkg/core";
 import { UsageError } from "clipanion";
 import { BranchType, GitVersionBranch } from "../types";
 import { currentBranch } from "./git";
@@ -50,7 +50,7 @@ export class GitVersionConfiguration {
   }
 
   static async fromContext(yarnConfig: Configuration, report: Report)  {
-    const branch = await currentBranch();
+    const branch = await currentBranch(yarnConfig.projectCwd!);
 
     return new GitVersionConfiguration(branch, yarnConfig, report);
   }

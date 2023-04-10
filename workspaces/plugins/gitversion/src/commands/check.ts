@@ -1,6 +1,5 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Configuration, MessageName, Project, structUtils } from "@yarnpkg/core";
-import { GitVersionConfiguration } from "../utils/configuration";
+import { MessageName, Project, structUtils } from "@yarnpkg/core";
 import { runStep } from "../utils/report";
 
 export class GitVersionCheckCommand extends BaseCommand {

@@ -1,13 +1,9 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { Configuration, MessageName, Project, StreamReport } from "@yarnpkg/core";
-import { Option } from "clipanion";
+import { MessageName, Project } from "@yarnpkg/core";
 import { BranchType } from "../types";
-import { updateWorkspacesWithVersion, updateWorkspaceWithVersion } from "../utils";
-import { bump } from "../utils/bump";
-import { changelog } from "../utils/changelog";
-import { GitVersionConfiguration } from "../utils/configuration";
+import { tagPrefix, updateWorkspaceChangelog, updateWorkspacesVersion } from "../utils";
+import { bumpChangelog, bumpVersion } from "../utils/bump";
 import { runStep } from "../utils/report";
-import { tagPrefix } from "../utils/tags";
 import { GitVersionRestoreCommand } from "./restore";
 
 export class GitVersionBumpCommand extends BaseCommand {
@@ -35,19 +31,17 @@ export class GitVersionBumpCommand extends BaseCommand {
       if (configuration.independentVersioning) {
         report.reportError(MessageName.UNNAMED, 'IndependentVersioning is not implemented')
       } else {
-        const version = await bump(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, report);
+        const version = await bumpVersion(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace, report);
         
         if (version) {
-          await updateWorkspaceWithVersion(project.topLevelWorkspace, version, report);
-          await updateWorkspacesWithVersion(project.topLevelWorkspace.getRecursiveWorkspaceChildren(), version, report);
+          await updateWorkspacesVersion(project.workspaces, version, report);
 
-          await changelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), project, project.topLevelWorkspace, report)
-
-          // const childUpdates = project.topLevelWorkspace.getRecursiveWorkspaceChildren().map((workspace) => {
-          //   return changelog(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project,workspace, configuration.report)
-          // })
-
-          // Promise.all(childUpdates);
+          for (let workspace of project.workspaces) {
+            const changelog = await bumpChangelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), workspace, report);
+            if (changelog) {
+              updateWorkspaceChangelog(workspace, version, changelog, report);
+            }
+          }          
         }
       }
     });

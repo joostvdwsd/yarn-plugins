@@ -1,0 +1,31 @@
+{
+  "name": "yarn-plugin-conventional-commits",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@yarnpkg/cli": "^3",
+    "@yarnpkg/core": "^3",
+    "clipanion": "^3.2.0",
+    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "yarn-plugin-gitversion": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "^14.18.21",
+    "typescript": "^4.7.4"
+  },
+  "scripts": {
+    "build": "yarn node ./scripts/build.js && tsc --build && yarn move",
+    "move": "cp bundles/@yarnpkg/plugin-conventional-commits.js ../../../dist/conventional-commits.js"
+  },
+  "version": "0.0.3",
+  "publishConfig": {
+    "main": "./lib/index.js",
+    "typings": "./lib/index.d.ts"
+  },
+  "files": [
+    "/bundles/**/*",
+    "/lib/**/*"
+  ],
+  "yarn.build": {
+    "output": "lib"
+  }
+}

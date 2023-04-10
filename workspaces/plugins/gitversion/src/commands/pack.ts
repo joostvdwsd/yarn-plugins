@@ -1,19 +1,18 @@
 import { BaseCommand } from "@yarnpkg/cli";
-import { execUtils, MessageName, Project, Report, structUtils, Workspace } from "@yarnpkg/core";
-import { BranchType, PublishedPackage, PublishedVersion } from "../types";
+import { Configuration, execUtils, MessageName, Project, Report, structUtils, Workspace } from "@yarnpkg/core";
+import { BranchType } from "../types";
 
-import { join, join as pjoin } from 'path';
-import { existsSync } from "fs";
+import { join } from 'path';
 import { Option } from "clipanion";
 import { runStep } from "../utils/report";
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir } from "fs/promises";
 
 import PQueue from 'p-queue';
 
 // @ts-ignore
 import { cpus } from "os";
-import { CONFIG_FILE, PrepublishedPackageConfig, prepublishedPackageName } from "../utils/prepublished-packages";
 import * as t from 'typanion';
+import { PackManifest } from "../utils/pack-manifest";
 
 const parseChangelog = require("changelog-parser");
 
@@ -22,7 +21,7 @@ export class GitVersionPackCommand extends BaseCommand {
     [`gitversion`, `pack`],
   ];
 
-  outputFolder = Option.String('Output folder', 'gitversion-package');
+  packFolder = Option.String('Git version package folder', '.yarn/gitversion/package');
   maxConcurrency = Option.String(`-m,--max-concurrency`, {
     description: `is the maximum number of jobs that can run at a time, defaults to the number of logical CPUs on the current machine.`,
     validator: t.isNumber()
@@ -40,78 +39,44 @@ export class GitVersionPackCommand extends BaseCommand {
 
         const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
-        if (configuration.independentVersioning) {
-          report.reportError(MessageName.UNNAMED, 'IndependentVersioning is not implemented')
-        } else {
+        const publicWorkspaces = project.workspaces.filter(this.filterPublicWorkspace);
+        const packManifest = await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
+        
+        const packFolder = join(project.cwd, this.packFolder)
+        await mkdir(packFolder, {
+          recursive: true
+        });
 
-          const publicWorkspaces = project.workspaces.filter(this.filterPublicWorkspace);
-          
-          const packFolder = join(project.cwd, this.outputFolder)
-          await mkdir(packFolder, {
-            recursive: true
-          });
+        const queue = new PQueue({
+          concurrency: this.maxConcurrency ? this.maxConcurrency : cpus().length
+        })
 
-          const queue = new PQueue({
-            concurrency: this.maxConcurrency ? this.maxConcurrency : cpus().length
-          })
-
-          queue.addAll(publicWorkspaces.map((workspace) => this.execPackCommand(workspace, report, packFolder)));
-          await queue.onIdle();
-
-          try {
-            report.reportInfo(MessageName.UNNAMED, 'Generating changelog');
-            const diff = await execUtils.execvp('git', ['diff', '--', '*CHANGELOG.md'], {
-              cwd: project.cwd
-            });
-
-            await writeFile(join(packFolder, 'gitversion.changelog.patch'), diff.stdout);
-          } catch (error) {
-            report.reportWarning(MessageName.UNNAMED, `Error generating changelog diff: '${error}'`);
-          }
-
-          report.reportInfo(MessageName.UNNAMED, 'Generating config');
-          const configContent = JSON.stringify({
-            versionBranch: configuration.versionBranch.name,
-            version: project.topLevelWorkspace.manifest.version,
-          } as PrepublishedPackageConfig)
-          await writeFile(join(packFolder, CONFIG_FILE), configContent, 'utf-8');
+        for (const workspace of publicWorkspaces) {
+          const workspaceInfo = await PackManifest.workspaceInfo(
+            workspace, configuration, report
+          );
+          queue.add(this.execPackCommand(workspace, configuration.yarnConfig, report, workspaceInfo.name, packFolder));
         }
+
+        await queue.onIdle();
+
+        report.reportInfo(MessageName.UNNAMED, 'Generating config');
+        await packManifest.write(packFolder);
+
       } catch (error) {
         throw error;
       }
     });
   }
 
-  execPackCommand(workspace: Workspace, report: Report, packFolder: string) {
+  execPackCommand(workspace: Workspace, configuration: Configuration, report: Report, name: string, packFolder: string) {
     return async () => {
-      report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.stringifyIdent(workspace.locator)}`)
-      await execUtils.execvp('yarn', ['pack', '-o', join(packFolder, prepublishedPackageName(workspace))], {
+      report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.prettyLocator(configuration, workspace.locator)}`)
+      await execUtils.execvp('yarn', ['pack', '-o', `${join(packFolder, name)}.tgz`], {
         cwd: workspace.cwd,
       })
     }
   }
-
-  async readChangeLog(workspace: Workspace) : Promise<PublishedPackage> {
-    const filePath = pjoin(workspace.cwd, 'CHANGELOG.md');
-
-    const releasedVersion = workspace.manifest.version;
-
-    let currentReleaseChangelog : string | undefined;
-    
-    if (existsSync(filePath)) {
-      const changeLog = await parseChangelog({
-        filePath: pjoin(workspace.cwd, 'CHANGELOG.md'),
-        removeMarkdown: false
-      })
-
-      currentReleaseChangelog = changeLog.versions.find((versionEntry : any) => versionEntry.version === releasedVersion)?.body;
-    }
-    return {
-      version: releasedVersion || '0.0.0',
-      changelog: currentReleaseChangelog,
-      packageName: structUtils.stringifyIdent(workspace.locator)
-    }
-}
   
   filterPublicWorkspace(workspace: Workspace) : boolean {
     return workspace.manifest.private === false

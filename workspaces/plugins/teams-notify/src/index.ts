@@ -1,10 +1,11 @@
 import {Configuration, Hooks, Plugin, Project, SettingsType, structUtils, Workspace} from '@yarnpkg/core';
-import { BranchType, GitVersionBranch, PublishedPackage, PublishedVersion } from '@joostvdwsd/yarn-plugin-gitversion';
+import { BranchType, GitVersionBranch } from '@joostvdwsd/yarn-plugin-gitversion';
 import { IAdaptiveCard } from 'adaptivecards';
 import { IAction, IColumnSet, IContainer, IFactSet, IImage, IImageSet, ITextBlock } from 'adaptivecards/lib/schema';
 import axios from 'axios';
 import { BaseCommand } from '@yarnpkg/cli';
 import { UsageError } from 'clipanion';
+import { PackManifest } from '@joostvdwsd/yarn-plugin-gitversion/src/utils/pack-manifest';
 
 declare module '@yarnpkg/core' {
   interface ConfigurationValueMap {
@@ -84,7 +85,7 @@ const plugin: Plugin = {
   } as Partial<Hooks>,
 };
 
-async function afterPublish(project: Project, branch: GitVersionBranch, publishedVersion: PublishedVersion) {
+async function afterPublish(project: Project, branch: GitVersionBranch, packManifest: PackManifest, dryRun: boolean) {
   const url = project.configuration.get('teamsWebhookUrl');     
   
   const titlePostFix = branch.branchType === BranchType.MAIN ? '' : ` on ${branch.name} (${branch.branchType})`;

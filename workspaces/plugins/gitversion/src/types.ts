@@ -1,4 +1,8 @@
-import { Project, Workspace } from "@yarnpkg/core";
+import { Project } from "@yarnpkg/core";
+import { Options as ParserOptions } from 'conventional-commits-parser';
+import { WriterOptions } from 'conventional-changelog-core';
+import { Options as RecommendedBumpOptions} from 'conventional-recommended-bump';
+import { PackManifest } from "./utils/pack-manifest";
 
 export enum BranchType {
   MAIN = 'main',
@@ -13,16 +17,6 @@ export interface GitVersionBranch {
   readonly branchType : BranchType;
 }
 
-export interface PublishedPackage {
-  readonly version: string;
-  readonly packageName: string;
-  readonly changelog: string | undefined;
-}
-
-export interface PublishedVersion extends PublishedPackage {
-  readonly packages: PublishedPackage[];
-}
-
 declare module '@yarnpkg/core' {
   interface ConfigurationValueMap {
     
@@ -35,8 +29,19 @@ declare module '@yarnpkg/core' {
   }
 }
 
+export interface ExtendedParserOptions extends ParserOptions {
+  breakingHeaderPattern: RegExp;
+}
+
+export interface ConventionalCommitConfig {
+  writerOpts: WriterOptions;
+  parserOpts: ExtendedParserOptions;
+  recommendedBumpOpts: RecommendedBumpOptions;
+}
+
 declare module '@yarnpkg/core' {
   interface Hooks {
-    afterPublish(project: Project, branch: GitVersionBranch, publishedVersion: PublishedVersion) : Promise<void>;
+    afterPublish(project: Project, branch: GitVersionBranch, packManifest: PackManifest, dryRun: boolean) : Promise<void>;
+    conventionalCommitOptions(previousOptions: ConventionalCommitConfig) : Promise<ConventionalCommitConfig>;
   }
 }
