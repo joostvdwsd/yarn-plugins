@@ -1,11 +1,8 @@
-import {Configuration, Hooks, Plugin, Project, SettingsType, structUtils, Workspace} from '@yarnpkg/core';
-import { BranchType, GitVersionBranch } from '@joostvdwsd/yarn-plugin-gitversion';
-import { IAdaptiveCard } from 'adaptivecards';
-import { IAction, IColumnSet, IContainer, IFactSet, IImage, IImageSet, ITextBlock } from 'adaptivecards/lib/schema';
+import {Configuration, Hooks, Plugin, Project, SettingsType, structUtils } from '@yarnpkg/core';
+import { BranchType, GitVersionBranch, IPackManifest, PackManifest, WorkspaceInfo } from 'yarn-plugin-gitversion';
+import { IFactSet } from 'adaptivecards/lib/schema';
 import axios from 'axios';
 import { BaseCommand } from '@yarnpkg/cli';
-import { UsageError } from 'clipanion';
-import { PackManifest } from '@joostvdwsd/yarn-plugin-gitversion/src/utils/pack-manifest';
 
 declare module '@yarnpkg/core' {
   interface ConfigurationValueMap {
@@ -49,15 +46,13 @@ export class GitVersionCheckCommand extends BaseCommand {
       name: 'rc',
       branchType: BranchType.PRERELEASE
     }, {
-      packageName: structUtils.stringifyIdent(project.topLevelWorkspace.locator),
-      version: '1.2.3',
-      changelog: 'Changelog entry',
-      packages: [{
-        packageName: '@yarn-plugins/test-package',
-        changelog: 'test changelog for test-package',
-        version: '1.2.3'
-      }]
-    })
+      project: {
+        name: 'test-plugins',
+        version: '1.2.3',
+        changelog: 'Changelog entry',
+      },
+      packages: {}
+    }, true)
     // conventionalRecommendedBump({
       
     // }, parserOpts, (error, recommendation) => {
@@ -85,11 +80,11 @@ const plugin: Plugin = {
   } as Partial<Hooks>,
 };
 
-async function afterPublish(project: Project, branch: GitVersionBranch, packManifest: PackManifest, dryRun: boolean) {
+async function afterPublish(project: Project, branch: GitVersionBranch, packManifest: IPackManifest, dryRun: boolean) {
   const url = project.configuration.get('teamsWebhookUrl');     
   
   const titlePostFix = branch.branchType === BranchType.MAIN ? '' : ` on ${branch.name} (${branch.branchType})`;
-  let title = `${publishedVersion.packageName} - new release : ${publishedVersion.version}${titlePostFix}`;
+  let title = `${packManifest.project.name} - new release : ${packManifest.project.version}${titlePostFix}`;
 
   const body : IMessageCard = {
     "@context": 'https://schema.org/extensions',
@@ -98,11 +93,10 @@ async function afterPublish(project: Project, branch: GitVersionBranch, packMani
     title: title,
     themeColor: '0072C6',
     sections: [{
-      text: publishedVersion.changelog,
+      text: packManifest.project.changelog,
     }, {
       activityTitle: 'Packages:',
-    }, 
-      ...packageSections(publishedVersion.packages, branch)
+    }
     ],
   };
 
@@ -118,15 +112,15 @@ async function afterPublish(project: Project, branch: GitVersionBranch, packMani
   }
 }
 
-function packageSections(packages: PublishedPackage[], branch: GitVersionBranch) : IMessageCardSection[] {
+function packageSections(packages: WorkspaceInfo[], branch: GitVersionBranch) : IMessageCardSection[] {
   const CODE_BLOCK_START = '```\n';
   const CODE_BLOCK_END = '\n```';
 
   return packages.map((publishedPackage) => {
     const installPostfix = branch.branchType === BranchType.MAIN ? '' : `@${branch.name}`
     return {
-      activityTitle: publishedPackage.packageName,
-      text: `${CODE_BLOCK_START}yarn add ${publishedPackage.packageName}${installPostfix}${CODE_BLOCK_END}`
+      activityTitle: publishedPackage.name,
+      text: `${CODE_BLOCK_START}yarn add ${publishedPackage.name}${installPostfix}${CODE_BLOCK_END}`
     }
   })
 }

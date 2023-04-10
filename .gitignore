@@ -4,4 +4,4 @@
 **/lib/**
 **/bundle
 node_modules
-env.json
+env**.json

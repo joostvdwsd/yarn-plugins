@@ -5674,9 +5674,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yarn-plugin-conventional-commits@workspace:workspaces/plugins/conventional-commits":
+"yarn-plugin-azure-devops-gitversion-utils@workspace:workspaces/plugins/azure-devops-gitversion-utils":
   version: 0.0.0-use.local
-  resolution: "yarn-plugin-conventional-commits@workspace:workspaces/plugins/conventional-commits"
+  resolution: "yarn-plugin-azure-devops-gitversion-utils@workspace:workspaces/plugins/azure-devops-gitversion-utils"
   dependencies:
     "@types/node": ^14.18.21
     "@yarnpkg/cli": ^3
@@ -5740,7 +5740,6 @@ __metadata:
   resolution: "yarn-plugin-teams-notify@workspace:workspaces/plugins/teams-notify"
   dependencies:
     "@types/node": ^14.18.21
-    "@yarnpkg/builder": ^3
     "@yarnpkg/cli": ^3
     "@yarnpkg/core": ^3
     adaptivecards: ^2.10.0

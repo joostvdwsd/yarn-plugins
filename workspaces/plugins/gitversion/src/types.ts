@@ -2,7 +2,7 @@ import { Project } from "@yarnpkg/core";
 import { Options as ParserOptions } from 'conventional-commits-parser';
 import { WriterOptions } from 'conventional-changelog-core';
 import { Options as RecommendedBumpOptions} from 'conventional-recommended-bump';
-import { PackManifest } from "./utils/pack-manifest";
+import { IPackManifest } from "./utils/pack-manifest";
 
 export enum BranchType {
   MAIN = 'main',
@@ -18,11 +18,9 @@ export interface GitVersionBranch {
 }
 
 declare module '@yarnpkg/core' {
-  interface ConfigurationValueMap {
-    
+  interface ConfigurationValueMap {    
     featureBranchPatterns: string[];
     releaseBranchPatterns: string[];
-    preReleaseBranchPatterns: string[];
     mainBranch: string;
     independentVersioning: boolean;
     versionTagPrefix: string;
@@ -41,7 +39,7 @@ export interface ConventionalCommitConfig {
 
 declare module '@yarnpkg/core' {
   interface Hooks {
-    afterPublish(project: Project, branch: GitVersionBranch, packManifest: PackManifest, dryRun: boolean) : Promise<void>;
+    afterPublish(project: Project, branch: GitVersionBranch, packManifest: IPackManifest, dryRun: boolean) : Promise<void>;
     conventionalCommitOptions(previousOptions: ConventionalCommitConfig) : Promise<ConventionalCommitConfig>;
   }
 }

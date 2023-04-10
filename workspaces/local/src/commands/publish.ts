@@ -34,7 +34,7 @@ export class ReleasePublishCommand extends BaseCommand {
 
     const options: RequestOptions = {
       host: url.host,
-      port: url.port,
+      port: 443,
       path: `${url.pathname}/${name}/${workspace.manifest.version}`,
       method: 'POST',
       headers: {
@@ -42,6 +42,8 @@ export class ReleasePublishCommand extends BaseCommand {
         'x-api-key': env.apiKey
       }
     };
+
+    console.log(options)
     
     const req = request(options, (res) => {
       console.log('STATUS: ' + res.statusCode);

@@ -12,7 +12,12 @@ export interface WorkspaceInfo {
   version?: string;
   changelog?: string;
   name: string;
-  cwd: string;
+  cwd?: string;
+}
+
+export interface IPackManifest {
+  project: WorkspaceInfo;
+  packages: Record<string, WorkspaceInfo>;
 }
 
 export interface PackManifestGitStatus {
@@ -20,10 +25,10 @@ export interface PackManifestGitStatus {
   statusHash: string;
 }
 
-export class PackManifest {
+export class PackManifest implements IPackManifest {
   project: WorkspaceInfo;
   packages: Record<string, WorkspaceInfo> = {};
-  gitStatus: PackManifestGitStatus;
+  gitStatus?: PackManifestGitStatus;
 
   constructor(project: WorkspaceInfo, gitStatus: PackManifestGitStatus) {
     this.project = project;

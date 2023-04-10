@@ -20,8 +20,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:workspaces/local"\
       },\
       {\
-        "name": "yarn-plugin-conventional-commits",\
-        "reference": "workspace:workspaces/plugins/conventional-commits"\
+        "name": "yarn-plugin-azure-devops-gitversion-utils",\
+        "reference": "workspace:workspaces/plugins/azure-devops-gitversion-utils"\
       },\
       {\
         "name": "yarn-plugin-gitversion",\
@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
-      ["yarn-plugin-conventional-commits", ["workspace:workspaces/plugins/conventional-commits"]],\
+      ["yarn-plugin-azure-devops-gitversion-utils", ["workspace:workspaces/plugins/azure-devops-gitversion-utils"]],\
       ["yarn-plugin-gitversion", ["workspace:workspaces/plugins/gitversion"]],\
       ["yarn-plugin-local-development", ["workspace:workspaces/local"]],\
       ["yarn-plugin-teams-notify", ["workspace:workspaces/plugins/teams-notify"]],\
@@ -7229,11 +7229,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["yarn-plugin-conventional-commits", [\
-        ["workspace:workspaces/plugins/conventional-commits", {\
-          "packageLocation": "./workspaces/plugins/conventional-commits/",\
+      ["yarn-plugin-azure-devops-gitversion-utils", [\
+        ["workspace:workspaces/plugins/azure-devops-gitversion-utils", {\
+          "packageLocation": "./workspaces/plugins/azure-devops-gitversion-utils/",\
           "packageDependencies": [\
-            ["yarn-plugin-conventional-commits", "workspace:workspaces/plugins/conventional-commits"],\
+            ["yarn-plugin-azure-devops-gitversion-utils", "workspace:workspaces/plugins/azure-devops-gitversion-utils"],\
             ["@types/node", "npm:14.18.22"],\
             ["@yarnpkg/cli", "virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.5.0"],\
             ["@yarnpkg/core", "npm:3.5.0"],\
@@ -7302,7 +7302,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["yarn-plugin-teams-notify", "workspace:workspaces/plugins/teams-notify"],\
             ["@types/node", "npm:14.18.22"],\
-            ["@yarnpkg/builder", "npm:3.2.2"],\
             ["@yarnpkg/cli", "virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.5.0"],\
             ["@yarnpkg/core", "npm:3.5.0"],\
             ["adaptivecards", "npm:2.10.0"],\

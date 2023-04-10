@@ -1,40 +1,9 @@
-import {Configuration, Hooks, Plugin, Project } from '@yarnpkg/core';
-import { BaseCommand } from '@yarnpkg/cli';
-import { ConventionalCommitConfig } from '@joostvdwsd/yarn-plugin-gitversion';
-
-declare module '@yarnpkg/core' {
-  interface ConfigurationValueMap {
-    
-    teamsWebhookUrl: string;
-  }
-}
-
-export class GitVersionCheckCommand extends BaseCommand {
-  static paths = [
-    [`cc`, `test`],
-  ];
-
-  async execute() {
-    const yarnConfig = await Configuration.find(this.context.cwd, this.context.plugins);
-
-    const { project } = await Project.find(yarnConfig, this.context.cwd);
-
-    project.workspaces.forEach((child) => {
-      console.log(child.locator.scope, child.locator.name, child.manifest.private, child.manifest.version)
-    })
-    console.log('HELLO FROM PLUGIN')
-
-
-  }
-}
-
+import { Hooks, Plugin } from '@yarnpkg/core';
+import { ConventionalCommitConfig } from 'yarn-plugin-gitversion';
 
 const plugin: Plugin = {
   configuration: {
   },
-  commands: [
-    GitVersionCheckCommand
-  ],
   hooks: {  
     async conventionalCommitOptions(previousOptions: ConventionalCommitConfig) {
       const headerPattern = previousOptions.parserOpts.headerPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!?: (.*)$/'
