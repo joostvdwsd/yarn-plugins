@@ -89,10 +89,10 @@ export async function generateChangeLog(options: GenerateChangelogParams) : Prom
       skipUnstable: true,
     } as any, {
       version: options.version,
-      host: 'unknown'
+      host: 'unknown',
     }, { 
       merges: null, 
-      path: options.path
+      path: options.path,
     }, options.config.parserOpts,
       options.config.writerOpts
     );

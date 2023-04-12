@@ -22,10 +22,12 @@ export async function bumpVersion(versionBranch: GitVersionBranch, tagPrefix: st
   });
 
   return bump.version;
-
 }
 
 export async function bumpChangelog(versionBranch: GitVersionBranch, version: string, tagPrefix: string, workspace: Workspace, report: Report) {
+
+  const currentCwd = process.cwd();
+  process.chdir(workspace.project.cwd);
 
   if (versionBranch.branchType === BranchType.FEATURE) {
     report.reportInfo(MessageName.UNNAMED, '[CHANGELOG] Skipping changelog due to feature branch');
@@ -34,11 +36,12 @@ export async function bumpChangelog(versionBranch: GitVersionBranch, version: st
 
   const config = await loadConventionalCommitConfig(workspace.project);
 
-  return await generateChangeLog({
+  const result = await generateChangeLog({
     config: config,
     version: version,
     path: workspace.relativeCwd,
     tagPrefix: tagPrefix,
   });
-
+  process.chdir(currentCwd);
+  return result;
 }
