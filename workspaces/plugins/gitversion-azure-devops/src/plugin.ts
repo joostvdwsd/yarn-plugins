@@ -10,24 +10,24 @@ const plugin: Plugin = {
      * @param previousOptions 
      * @returns 
      */
-    async conventionalCommitOptions(previousOptions: ConventionalCommitConfig) {
-      const headerPattern = previousOptions.parserOpts.headerPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!?: (.*)$/'
-      const breakingHeaderPattern = previousOptions.parserOpts.breakingHeaderPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!: (.*)$/'
-      const revertPattern = previousOptions.parserOpts.revertPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!?: (.*)$/'
+    async conventionalCommitOptions(previousOptions: any) {
+      const result = (await previousOptions({
+        commitUrlFormat: 'https://dev.azure.com/aegon-nl/{{repository}}/commit/{{hash}}',
+        compareUrlFormat: 'https://dev.azure.com/aegon-nl/{{repository}}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}&_a=files',
+      }));
+
+      const headerPattern = result.parserOpts.headerPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!?: (.*)$/'
+      const breakingHeaderPattern = result.parserOpts.breakingHeaderPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!: (.*)$/'
+      const revertPattern = result.parserOpts.revertPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!?: (.*)$/'
 
       return {
-        ...previousOptions,
+        ...result,
         parserOpts: {
-          ...previousOptions.parserOpts,
+          ...result.parserOpts,
           headerPattern: new RegExp(headerPattern.replace('/^', '^(?:Merged PR \d+: )?').replace(/\/$/, '')),
           breakingHeaderPattern: new RegExp(breakingHeaderPattern.replace('/^', '^(?:Merged PR \d+: )?').replace(/\/$/, '')),
           revertPattern: new RegExp(revertPattern.replace('/^', '^(?:Merged PR \d+: )?').replace(/\/$/, '')),
         },
-
-        writerOpts: {
-          ...previousOptions.writerOpts,
-          compareUrlFormat: 'https://dev.azure.com/aegon-nl/{{repository}}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}&_a=files',
-        }
       }
     },
 

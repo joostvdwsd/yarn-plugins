@@ -44,7 +44,7 @@ declare module '@yarnpkg/core' {
     afterBump(project: Project, branch: GitVersionBranch, projectBump: GitVersionBump) : Promise<void>;
 
     afterPublish(project: Project, branch: GitVersionBranch, projectBump: GitVersionBump, dryRun: boolean) : Promise<void>;
-    conventionalCommitOptions(previousOptions: ConventionalCommitConfig) : Promise<ConventionalCommitConfig>;
+    conventionalCommitOptions(previousOptions: any) : Promise<any>;
   }
 }
 

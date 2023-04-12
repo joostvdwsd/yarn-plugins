@@ -8,13 +8,14 @@ import conventionalChangelog from "conventional-changelog";
 
 export async function loadConventionalCommitConfig(project: Project) : Promise<ConventionalCommitConfig> {
 
-  const result = await cc();
+  // const result = await cc();
+  // console.log(result)
 
-  const initialParserOpts : ConventionalCommitConfig = result;
+  // const initialParserOpts : cc;
 
   return project.configuration.reduceHook(hooks => {
     return hooks.conventionalCommitOptions;
-  }, initialParserOpts);
+  }, cc);
 }
 
 export interface RecommendedBumpResult {

@@ -42,6 +42,7 @@ export class GitVersionBumpCommand extends BaseCommand {
 
           const changelog = await bumpChangelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace, report);
 
+          console.log('Changelog:\n', changelog)
           const bumpInfo : GitVersionBump = {
             locator: project.topLevelWorkspace.locator,
             private: true,
