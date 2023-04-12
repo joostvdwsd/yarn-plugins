@@ -12,7 +12,7 @@ export interface WorkspaceInfo {
   version?: string;
   changelog?: string;
   name: string;
-  cwd?: string;
+  cwd: string;
 }
 
 export interface IPackManifest {

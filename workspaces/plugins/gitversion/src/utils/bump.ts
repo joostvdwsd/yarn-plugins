@@ -9,7 +9,7 @@ export async function bumpVersion(versionBranch: GitVersionBranch, tagPrefix: st
   if (!currentVersion) {
     report.reportWarning(MessageName.UNNAMED, 'No version in manifest. Breaking off')
     return;
-  }
+  }  
 
   const config = await loadConventionalCommitConfig(workspace.project);
 

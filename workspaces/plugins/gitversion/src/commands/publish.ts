@@ -1,6 +1,6 @@
 import { BaseCommand } from "@yarnpkg/cli";
 import { MessageName, miscUtils, Project, Report, scriptUtils, structUtils, Workspace } from "@yarnpkg/core";
-import { BranchType } from "../types";
+import { BranchType, GitVersionBump } from "../types";
 
 import { join } from 'path';
 import { GitVersionTagCommand } from "./tag";
@@ -22,7 +22,7 @@ export class GitVersionPublishCommand extends BaseCommand {
     [`gitversion`, `publish`],
   ];
 
-  dryRun = Option.Boolean('--dryRun', true);
+  dryRun = Option.Boolean('-n,--dry-run', true);
   skipTag = Option.Boolean('--skipTag', false);
   skipCommit = Option.Boolean('--skipCommit', false);
 
@@ -67,10 +67,17 @@ export class GitVersionPublishCommand extends BaseCommand {
       if (configuration.independentVersioning) {
         report.reportError(MessageName.UNNAMED, 'IndependentVersioning is not implemented')
       } else {
-        const publicWorkspaces = project.workspaces.filter(this.filterPublicWorkspace);
+        const publicWorkspaces = project.topLevelWorkspace.getRecursiveWorkspaceChildren().filter(this.filterPublicWorkspace);
 
-        const packManifest = await PackManifest.fromPackageFolder(project, this.packFolder) ??
-          await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
+        const packManifest = await PackManifest.fromPackageFolder(project, this.packFolder) ?? await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
+
+        const bumpInfo : GitVersionBump = {
+          locator: project.topLevelWorkspace.locator,
+          private: true,
+          version: packManifest.project.version ?? '0.0.0',
+          changelog: packManifest.project.changelog,
+          workspaces: []
+        }
 
         report.reportSeparator();
 
@@ -79,6 +86,13 @@ export class GitVersionPublishCommand extends BaseCommand {
           await scriptUtils.maybeExecuteWorkspaceLifecycleScript(workspace, `prepublish`, {report});
           const ident = structUtils.slugifyLocator(workspace.locator);
           const packFilename = join(this.packFolder, ident) + '.tgz';
+
+          bumpInfo.workspaces.push({
+            locator: workspace.locator,
+            private: false,
+            version: workspace.manifest.version ?? '0.0.0',
+            changelog: packManifest.packages[ident].changelog,            
+          })
 
           if (packManifest.packages[ident] && existsSync(packFilename)) {
             report.reportInfo(MessageName.UNNAMED, `Pre packed archive found in ${packFilename}. Publishing archive`);
@@ -106,7 +120,7 @@ export class GitVersionPublishCommand extends BaseCommand {
 
         await project.configuration.triggerHook(hooks => {
           return hooks.afterPublish;
-        }, project, configuration.versionBranch, packManifest, this.dryRun);
+        }, project, configuration.versionBranch, bumpInfo, this.dryRun);
       }
     });
   }

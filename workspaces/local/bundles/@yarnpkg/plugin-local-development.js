@@ -647,8 +647,9 @@ var plugin = (() => {
     if ((0, import_cli.getDynamicLibs)().has(request2)) {
       return !notDynamic.includes(request2);
     }
-    if (request2.match(/^@yarnpkg\/plugin-/))
+    if (request2.match(/^@yarnpkg\/plugin-/)) {
       return true;
+    }
     return false;
   };
   function getDynamicLibResolverPlugin(currentPluginName) {
@@ -741,7 +742,7 @@ var plugin = (() => {
 `)
         },
         entryPoints: [
-          (0, import_path2.resolve)(workspace.cwd, "src/index.ts")
+          (0, import_path2.resolve)(workspace.cwd, "src/plugin.ts")
         ],
         bundle: true,
         outfile: outFile,
@@ -792,7 +793,7 @@ var plugin = (() => {
       const url = new URL(env.apiUrl);
       const options = {
         host: url.host,
-        port: url.port,
+        port: 443,
         path: `${url.pathname}/${name}/${workspace.manifest.version}`,
         method: "POST",
         headers: {

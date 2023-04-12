@@ -23,3 +23,5 @@ export const plugin: Plugin = {
     GitVersionPackCommand,
   ],
 };
+
+export default plugin;

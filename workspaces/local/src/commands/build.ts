@@ -59,7 +59,7 @@ export class PluginBuildCommand extends BaseCommand {
         ].join(`\n`),
       },
       entryPoints: [
-        resolve(workspace.cwd, 'src/index.ts')
+        resolve(workspace.cwd, 'src/plugin.ts')
       ],
       bundle: true,
       outfile: outFile,

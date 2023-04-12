@@ -1,9 +1,7 @@
 import { Project } from "@yarnpkg/core";
 import cc from 'conventional-changelog-conventionalcommits';
 
-import { Options as ParserOptions } from 'conventional-commits-parser';
-import { Options as WriterOptions } from 'conventional-changelog-core';
-import conventionalRecommendedBump, { Options as RecommendedBumpOptions} from 'conventional-recommended-bump';
+import conventionalRecommendedBump from 'conventional-recommended-bump';
 import { BranchType, ConventionalCommitConfig, GitVersionBranch } from "../types";
 import semver from 'semver';
 import conventionalChangelog from "conventional-changelog";

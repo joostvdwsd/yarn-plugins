@@ -1,9 +1,11 @@
-import { Project } from "@yarnpkg/core";
+import { Locator, Project } from "@yarnpkg/core";
 import { Options as ParserOptions } from 'conventional-commits-parser';
 import { WriterOptions } from 'conventional-changelog-core';
 import { Options as RecommendedBumpOptions} from 'conventional-recommended-bump';
-import { IPackManifest } from "./utils/pack-manifest";
 
+/**
+ * Branch matching 
+ */
 export enum BranchType {
   MAIN = 'main',
   PRERELEASE = 'prerelease',
@@ -17,6 +19,10 @@ export interface GitVersionBranch {
   readonly branchType : BranchType;
 }
 
+/**
+ * Yarn configuration
+ */
+
 declare module '@yarnpkg/core' {
   interface ConfigurationValueMap {    
     featureBranchPatterns: string[];
@@ -27,6 +33,39 @@ declare module '@yarnpkg/core' {
   }
 }
 
+/**
+ * Hook config
+ */
+
+declare module '@yarnpkg/core' {
+  interface Hooks {
+    beforeBump(project: Project, branch: GitVersionBranch) : Promise<void>;
+    
+    afterBump(project: Project, branch: GitVersionBranch, projectBump: GitVersionBump) : Promise<void>;
+
+    afterPublish(project: Project, branch: GitVersionBranch, projectBump: GitVersionBump, dryRun: boolean) : Promise<void>;
+    conventionalCommitOptions(previousOptions: ConventionalCommitConfig) : Promise<ConventionalCommitConfig>;
+  }
+}
+
+/**
+ * Bump hooks
+ */
+
+export interface GitVersionWorkspaceBump {
+  locator: Locator;
+  version: string;
+  private: boolean;
+  changelog?: string;
+}
+
+export interface GitVersionBump extends GitVersionWorkspaceBump {
+  workspaces: GitVersionWorkspaceBump[];
+}
+
+/**
+ * Conventional commit
+ */
 export interface ExtendedParserOptions extends ParserOptions {
   breakingHeaderPattern: RegExp;
 }
@@ -37,9 +76,3 @@ export interface ConventionalCommitConfig {
   recommendedBumpOpts: RecommendedBumpOptions;
 }
 
-declare module '@yarnpkg/core' {
-  interface Hooks {
-    afterPublish(project: Project, branch: GitVersionBranch, packManifest: IPackManifest, dryRun: boolean) : Promise<void>;
-    conventionalCommitOptions(previousOptions: ConventionalCommitConfig) : Promise<ConventionalCommitConfig>;
-  }
-}

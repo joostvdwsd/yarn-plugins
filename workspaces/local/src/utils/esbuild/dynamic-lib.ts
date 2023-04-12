@@ -11,8 +11,9 @@ const isDynamicLib = (request: any) => {
     return !notDynamic.includes(request);
   }
 
-  if (request.match(/^@yarnpkg\/plugin-/))
+  if (request.match(/^@yarnpkg\/plugin-/)) {
     return true;
+  }
 
   return false;
 };
