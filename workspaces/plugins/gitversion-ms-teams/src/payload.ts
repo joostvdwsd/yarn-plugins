@@ -71,6 +71,7 @@ export const payload = (props: PayloadProps) => {
                   title: "Version",
                   value: props.bumpInfo.version,
                 },
+                
                 {
                   title: "Branch",
                   value: `${props.branch.name} - (${props.branch.branchType} branch)`,

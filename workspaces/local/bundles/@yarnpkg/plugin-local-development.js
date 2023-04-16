@@ -801,7 +801,6 @@ var plugin = (() => {
           "x-api-key": env.apiKey
         }
       };
-      console.log(options);
       const req = (0, import_https.request)(options, (res) => {
         console.log("STATUS: " + res.statusCode);
         console.log("HEADERS: " + JSON.stringify(res.headers));

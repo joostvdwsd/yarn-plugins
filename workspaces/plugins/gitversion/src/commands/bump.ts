@@ -32,9 +32,7 @@ export class GitVersionBumpCommand extends BaseCommand {
         report.reportError(MessageName.UNNAMED, 'IndependentVersioning is not implemented')
       } else {
 
-        project.configuration.triggerHook(hooks => {
-          return hooks.beforeBump
-        }, project, configuration.versionBranch)
+        project.configuration.triggerHook(hooks => hooks.beforeBump, project, configuration.versionBranch)
 
         const version = await bumpVersion(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace, report);
         

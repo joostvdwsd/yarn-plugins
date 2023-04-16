@@ -1,21 +1,18 @@
 import { Project } from "@yarnpkg/core";
-import cc from 'conventional-changelog-conventionalcommits';
 
 import conventionalRecommendedBump from 'conventional-recommended-bump';
-import { BranchType, ConventionalCommitConfig, GitVersionBranch } from "../types";
+import { BranchType, GitVersionBranch } from "../types";
 import semver from 'semver';
 import conventionalChangelog from "conventional-changelog";
+import { AnyPresetConfig, loadPreset } from "conventional-changelog-presets-loader";
 
-export async function loadConventionalCommitConfig(project: Project) : Promise<ConventionalCommitConfig> {
+export async function loadConventionalCommitConfig(project: Project) : Promise<AnyPresetConfig> {
 
-  // const result = await cc();
-  // console.log(result)
-
-  // const initialParserOpts : cc;
+  const initialOptions = await loadPreset('conventional-commits');
 
   return project.configuration.reduceHook(hooks => {
     return hooks.conventionalCommitOptions;
-  }, cc);
+  }, initialOptions);
 }
 
 export interface RecommendedBumpResult {
@@ -27,7 +24,7 @@ export interface RecommendedBumpResult {
 export interface RecommendedBumpParams {
   versionBranch: GitVersionBranch;
   currentVersion: string;
-  config: ConventionalCommitConfig;
+  config: AnyPresetConfig;
   path: string;
   tagPrefix: string;
 }
@@ -75,7 +72,7 @@ export async function recommendedBump(options: RecommendedBumpParams) : Promise<
 
 export interface GenerateChangelogParams {
   version: string;
-  config: ConventionalCommitConfig;
+  config: AnyPresetConfig;
   path: string;
   tagPrefix: string;
 }

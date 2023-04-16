@@ -1,5 +1,6 @@
 import { Hooks, Plugin, Project, structUtils } from '@yarnpkg/core';
-import { ConventionalCommitConfig, GitVersionBranch, GitVersionBump } from 'yarn-plugin-gitversion';
+import { AnyPresetConfig, loadPreset } from 'conventional-changelog-presets-loader';
+import { GitVersionBranch, GitVersionBump } from 'yarn-plugin-gitversion';
 
 const plugin: Plugin = {
   configuration: {
@@ -10,11 +11,11 @@ const plugin: Plugin = {
      * @param previousOptions 
      * @returns 
      */
-    async conventionalCommitOptions(previousOptions: any) {
-      const result = (await previousOptions({
+    async conventionalCommitOptions(_previousOptions: AnyPresetConfig) : Promise<AnyPresetConfig> {
+      const result = await loadPreset('conventional-commits', {
         commitUrlFormat: 'https://dev.azure.com/aegon-nl/{{repository}}/commit/{{hash}}',
         compareUrlFormat: 'https://dev.azure.com/aegon-nl/{{repository}}/branchCompare?baseVersion=GT{{previousTag}}&targetVersion=GT{{currentTag}}&_a=files',
-      }));
+      });
 
       const headerPattern = result.parserOpts.headerPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!?: (.*)$/'
       const breakingHeaderPattern = result.parserOpts.breakingHeaderPattern?.toString() ?? '/^(\w*)(?:\((.*)\))?!: (.*)$/'

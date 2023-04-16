@@ -1,7 +1,6 @@
 import { Locator, Project } from "@yarnpkg/core";
 import { Options as ParserOptions } from 'conventional-commits-parser';
-import { WriterOptions } from 'conventional-changelog-core';
-import { Options as RecommendedBumpOptions} from 'conventional-recommended-bump';
+import { AnyPresetConfig } from 'conventional-changelog-presets-loader'
 
 /**
  * Branch matching 
@@ -44,7 +43,7 @@ declare module '@yarnpkg/core' {
     afterBump(project: Project, branch: GitVersionBranch, projectBump: GitVersionBump) : Promise<void>;
 
     afterPublish(project: Project, branch: GitVersionBranch, projectBump: GitVersionBump, dryRun: boolean) : Promise<void>;
-    conventionalCommitOptions(previousOptions: any) : Promise<any>;
+    conventionalCommitOptions(previousOptions: AnyPresetConfig) : Promise<AnyPresetConfig>;
   }
 }
 
@@ -68,11 +67,5 @@ export interface GitVersionBump extends GitVersionWorkspaceBump {
  */
 export interface ExtendedParserOptions extends ParserOptions {
   breakingHeaderPattern: RegExp;
-}
-
-export interface ConventionalCommitConfig {
-  writerOpts: WriterOptions;
-  parserOpts: ExtendedParserOptions;
-  recommendedBumpOpts: RecommendedBumpOptions;
 }
 

@@ -39,7 +39,7 @@ export async function updateWorkspaceChangelog(workspace: Workspace, version: st
   
   if (lastReleaseMatch && lastReleaseMatch.length > 1) {
     if (lastReleaseMatch[1] === version) {
-      report.reportInfo(MessageName.UNNAMED, 'Release already in CHANGELOG.md. Skipping new update');
+      // report.reportInfo(MessageName.UNNAMED, 'Release already in CHANGELOG.md. Skipping new update');
       return;
     }
   }

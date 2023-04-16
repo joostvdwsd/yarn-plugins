@@ -1,0 +1,54 @@
+{
+  "conventionalChangelog": {
+    "parserOpts": {
+      "headerPattern": {},
+      "headerCorrespondence": [
+        "language",
+        "type",
+        "message"
+      ]
+    },
+    "writerOpts": {
+      "groupBy": "language",
+      "commitGroupsSort": "title",
+      "commitsSort": [
+        "language",
+        "type",
+        "message"
+      ],
+      "mainTemplate": "{{> header}}\n\n{{#each commitGroups}}\n\n{{#if title}}\n### {{title}}\n\n{{/if}}\n{{#each commits}}\n{{> commit root=@root}}\n{{/each}}\n{{/each}}\n\n\n\n",
+      "headerPartial": "{{#if isPatch}}##{{else}}#{{/if}} {{#if @root.linkCompare}}[{{version}}]({{@root.host}}/{{#if @root.owner}}{{@root.owner}}/{{/if}}{{@root.repository}}/compare/{{previousTag}}...{{currentTag}}){{else}}{{version}}{{/if}}{{#if title}} \"{{title}}\"{{/if}}{{#if date}} ({{date}}){{/if}}\n",
+      "commitPartial": "{{#if type}}**{{type}}** {{/if}}{{message}}\n\n{{~!-- commit hash --}} {{#if @root.linkReferences}}([{{shortHash}}]({{#if @root.host}}{{@root.host}}/{{/if}}{{#if @root.owner}}{{@root.owner}}/{{/if}}{{@root.repository}}/{{@root.commit}}/{{hash}})){{else}}{{shortHash~}}{{/if}}\n\n{{~!-- commit references --}}{{#if references}}, closes{{~#each references}} {{#if @root.linkReferences}}[{{#if this.owner}}{{this.owner}}/{{/if}}{{this.repository}}#{{this.issue}}]({{#if @root.host}}{{@root.host}}/{{/if}}{{#if this.repository}}{{#if this.owner}}{{this.owner}}/{{/if}}{{this.repository}}{{else}}{{#if @root.owner}}{{@root.owner}}/{{/if}}{{@root.repository}}{{/if}}/{{@root.issue}}/{{this.issue}}){{else}}{{#if this.owner}}{{this.owner}}/{{/if}}{{this.repository}}#{{this.issue}}{{/if}}{{/each}}{{/if}}\n"
+    }
+  },
+  "parserOpts": {
+    "headerPattern": {},
+    "headerCorrespondence": [
+      "language",
+      "type",
+      "message"
+    ]
+  },
+  "recommendedBumpOpts": {
+    "parserOpts": {
+      "headerPattern": {},
+      "headerCorrespondence": [
+        "language",
+        "type",
+        "message"
+      ]
+    }
+  },
+  "writerOpts": {
+    "groupBy": "language",
+    "commitGroupsSort": "title",
+    "commitsSort": [
+      "language",
+      "type",
+      "message"
+    ],
+    "mainTemplate": "{{> header}}\n\n{{#each commitGroups}}\n\n{{#if title}}\n### {{title}}\n\n{{/if}}\n{{#each commits}}\n{{> commit root=@root}}\n{{/each}}\n{{/each}}\n\n\n\n",
+    "headerPartial": "{{#if isPatch}}##{{else}}#{{/if}} {{#if @root.linkCompare}}[{{version}}]({{@root.host}}/{{#if @root.owner}}{{@root.owner}}/{{/if}}{{@root.repository}}/compare/{{previousTag}}...{{currentTag}}){{else}}{{version}}{{/if}}{{#if title}} \"{{title}}\"{{/if}}{{#if date}} ({{date}}){{/if}}\n",
+    "commitPartial": "{{#if type}}**{{type}}** {{/if}}{{message}}\n\n{{~!-- commit hash --}} {{#if @root.linkReferences}}([{{shortHash}}]({{#if @root.host}}{{@root.host}}/{{/if}}{{#if @root.owner}}{{@root.owner}}/{{/if}}{{@root.repository}}/{{@root.commit}}/{{hash}})){{else}}{{shortHash~}}{{/if}}\n\n{{~!-- commit references --}}{{#if references}}, closes{{~#each references}} {{#if @root.linkReferences}}[{{#if this.owner}}{{this.owner}}/{{/if}}{{this.repository}}#{{this.issue}}]({{#if @root.host}}{{@root.host}}/{{/if}}{{#if this.repository}}{{#if this.owner}}{{this.owner}}/{{/if}}{{this.repository}}{{else}}{{#if @root.owner}}{{@root.owner}}/{{/if}}{{@root.repository}}{{/if}}/{{@root.issue}}/{{this.issue}}){{else}}{{#if this.owner}}{{this.owner}}/{{/if}}{{this.repository}}#{{this.issue}}{{/if}}{{/each}}{{/if}}\n"
+  }
+}

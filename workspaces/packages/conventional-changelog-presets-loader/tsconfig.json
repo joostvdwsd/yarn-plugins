@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "target": "ES2019",
+    "lib": [
+      "ES2019"
+    ],
+    "outDir": "lib",
+    "rootDir": "src",    
+    "incremental": true,
+    "composite": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "types": [ 
+      "node" 
+    ], 
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

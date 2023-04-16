@@ -43,8 +43,6 @@ export class ReleasePublishCommand extends BaseCommand {
       }
     };
 
-    console.log(options)
-    
     const req = request(options, (res) => {
       console.log('STATUS: ' + res.statusCode);
       console.log('HEADERS: ' + JSON.stringify(res.headers));

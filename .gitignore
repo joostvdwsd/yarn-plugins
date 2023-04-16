@@ -1,7 +1,10 @@
-# .yarn/cache
-.yarn/unplugged
+.yarn
+!.yarn/cache
+!.yarn/plugins
+!.yarn/releases
 
 **/lib/**
 **/bundle
+**/bundles
 node_modules
 env**.json
