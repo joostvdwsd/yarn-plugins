@@ -1,7 +1,7 @@
 import { Configuration, Project } from "@yarnpkg/core";
 import { BaseCommand } from "@yarnpkg/cli";
 import { resolve } from "path";
-import inlineImportPlugin from 'esbuild-plugin-inline-import';
+import { Option } from 'clipanion';
 import { pnpPlugin } from '@yarnpkg/esbuild-plugin-pnp';
 import { createRequire } from 'module';
 import { getDynamicLibResolverPlugin } from "../utils/esbuild/dynamic-lib";
@@ -12,6 +12,8 @@ export class PluginBuildCommand extends BaseCommand {
   static paths = [
     [`local`, `build`],
   ];
+
+  production = Option.Boolean('--production', false);
 
   async execute() {
     const yarnConfig = await Configuration.find(this.context.cwd, this.context.plugins);
@@ -72,7 +74,7 @@ export class PluginBuildCommand extends BaseCommand {
         getDynamicLibResolverPlugin(name),
         pnpPlugin(),
       ],
-      minify: false,
+      minify: this.production,
       sourcemap: false,//'inline',
       metafile: true,
       target: `node14`,

@@ -1,4 +1,3 @@
-import { PresetConfig, PresetConfigAngular, PresetConfigAtom, PresetConfigCodeMirror } from './types';
 import { presetConventionalCommits, presetAngular, presetAtom, presetCodeMirror } from './presets';
 
 export type Preset = 'conventional-commits' | 'angular' | 'atom' | 'codemirror';
@@ -8,11 +7,11 @@ type PresetLoaderArgs<T extends Preset> =
   [];
 
 type PresetLoaderResults<T extends Preset> =
-T extends 'angular' ? PresetConfigAngular : 
-T extends 'atom' ? PresetConfigAtom : 
-T extends 'codemirror' ? PresetConfigCodeMirror : 
-T extends 'conventional-commits' ? PresetConfig : 
-  PresetConfig;
+T extends 'angular' ? Awaited<ReturnType<typeof presetAngular>> : 
+T extends 'atom' ? Awaited<ReturnType<typeof presetAtom>> : 
+T extends 'codemirror' ? Awaited<ReturnType<typeof presetCodeMirror>> : 
+T extends 'conventional-commits' ? Awaited<ReturnType<typeof presetConventionalCommits>> : 
+  never;
 
 export async function loadPreset<P extends Preset>(preset: P, ...args: PresetLoaderArgs<P> ): Promise<PresetLoaderResults<P>> {
   switch (preset) {

@@ -65,7 +65,6 @@ export async function recommendedBump(options: RecommendedBumpParams) : Promise<
         reason: recommendation.reason,
         releaseType: recommendation.releaseType
       })
-
     })
   });
 }

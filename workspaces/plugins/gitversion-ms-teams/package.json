@@ -20,6 +20,8 @@
     "/lib/**/*"
   ],
   "scripts": {
-    "build": "yarn local build"
+    "build": "yarn tsc --noEmit && yarn local build",
+    "release": "yarn local publish",
+    "build:prod": "yarn tsc --noEmit && yarn local build --production"
   }
 }

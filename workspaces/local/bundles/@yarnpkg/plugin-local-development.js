@@ -634,6 +634,7 @@ var plugin = (() => {
   var import_core = __toModule(__require("@yarnpkg/core"));
   var import_cli2 = __toModule(__require("@yarnpkg/cli"));
   var import_path2 = __toModule(__require("path"));
+  var import_clipanion = __toModule(__require("clipanion"));
   var import_esbuild_plugin_pnp = __toModule(require_lib());
   var import_module = __toModule(__require("module"));
 
@@ -702,6 +703,10 @@ var plugin = (() => {
   // pnp:/Users/lupmtu1/Development/github/yarn-plugins/workspaces/local/src/commands/build.ts
   var import_promises2 = __toModule(__require("fs/promises"));
   var PluginBuildCommand = class extends import_cli2.BaseCommand {
+    constructor() {
+      super(...arguments);
+      this.production = import_clipanion.Option.Boolean("--production", false);
+    }
     async execute() {
       const yarnConfig = await import_core.Configuration.find(this.context.cwd, this.context.plugins);
       const {project, workspace} = await import_core.Project.find(yarnConfig, this.context.cwd);
@@ -754,7 +759,7 @@ var plugin = (() => {
           getDynamicLibResolverPlugin(name),
           (0, import_esbuild_plugin_pnp.pnpPlugin)()
         ],
-        minify: false,
+        minify: this.production,
         sourcemap: false,
         metafile: true,
         target: `node14`

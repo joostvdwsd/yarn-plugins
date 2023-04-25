@@ -17,6 +17,7 @@ export async function currentBranch(cwd: PortablePath) {
 }
 
 export async function tag(tagName: string, push: boolean, cwd: PortablePath) {
+  console.log('>> git', 'tag', tagName)
   await execUtils.execvp('git', ['tag', tagName], { cwd, encoding: 'utf-8'});
 
   if (push) {

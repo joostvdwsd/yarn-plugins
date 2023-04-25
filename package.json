@@ -14,15 +14,13 @@
     "./workspaces/packages/*"
   ],
   "scripts": {
-    "release": "yarn workspaces foreach -vAt --no-private local publish"
+    "build:all": "yarn workspaces foreach -vAt run build:prod",
+    "release:all": "yarn build:all && yarn workspaces foreach -vAt --no-private run release"
   },
   "devDependencies": {
     "esbuild": "^0.17.16",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
-  },
-  "engines": {
-    "node": ">=0.10.3 <11"
   },
   "dependenciesMeta": {
     "conventional-changelog-conventionalcommits@5.0.0": {

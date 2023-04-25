@@ -47,8 +47,8 @@ export declare interface ConventionalCommitsConfig {
 }
 
 export declare interface PresetConfig<P = ParserOpts, W = WriterOpts> {
-  conventionalChangelog: ConventionalChangelogOpts;
-  recommendedBumpOpts: RecommendedBumpOpts;
+  conventionalChangelog: ConventionalChangelogOpts<P, W>;
+  recommendedBumpOpts: RecommendedBumpOpts<P>;
   parserOpts: P;
   writerOpts: W;
 }

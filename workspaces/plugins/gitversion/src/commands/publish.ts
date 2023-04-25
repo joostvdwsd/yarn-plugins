@@ -14,15 +14,12 @@ import { npmConfigUtils, npmHttpUtils, npmPublishUtils } from '@yarnpkg/plugin-n
 import { GitVersionConfiguration } from "../utils";
 import { Readable } from "stream";
 
-
-const parseChangelog = require("changelog-parser");
-
 export class GitVersionPublishCommand extends BaseCommand {
   static paths = [
     [`gitversion`, `publish`],
   ];
 
-  dryRun = Option.Boolean('-n,--dry-run', true);
+  dryRun = Option.Boolean('-n,--dry-run', false);
   skipTag = Option.Boolean('--skipTag', false);
   skipCommit = Option.Boolean('--skipCommit', false);
 

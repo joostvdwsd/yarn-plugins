@@ -49,7 +49,7 @@ export class GitVersionBumpCommand extends BaseCommand {
             workspaces: []
           }
   
-          await updateWorkspacesVersion(project.topLevelWorkspace.getRecursiveWorkspaceChildren(), version, report);
+          await updateWorkspacesVersion(project.workspaces, version, report);
 
           for (let workspace of project.workspaces) {
             const changelog = await bumpChangelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), workspace, report);            

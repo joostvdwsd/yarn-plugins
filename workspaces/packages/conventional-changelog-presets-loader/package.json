@@ -3,6 +3,9 @@
   "packageManager": "yarn@3.5.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc --noEmit"
+  },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "conventional-changelog-angular": "^5.0.13",
