@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build:all": "yarn workspaces foreach -vAt run build:prod",
-    "release:all": "yarn build:all && yarn workspaces foreach -vAt --no-private run release"
+    "release:all": "yarn build:all && yarn workspaces foreach -vAt --no-private run release && yarn gitversion tag"
   },
   "devDependencies": {
     "esbuild": "^0.17.16",

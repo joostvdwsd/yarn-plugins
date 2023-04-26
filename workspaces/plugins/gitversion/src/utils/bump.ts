@@ -31,7 +31,6 @@ export async function bumpVersion(versionBranch: GitVersionBranch, tagPrefix: st
 export async function bumpChangelog(versionBranch: GitVersionBranch, version: string, tagPrefix: string, workspace: Workspace, report: Report) {
 
   if (versionBranch.branchType === BranchType.FEATURE) {
-    report.reportInfo(MessageName.UNNAMED, '[CHANGELOG] Skipping changelog due to feature branch');
     return;
   }
 
