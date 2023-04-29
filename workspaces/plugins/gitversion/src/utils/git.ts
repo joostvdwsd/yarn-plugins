@@ -25,12 +25,15 @@ export async function tag(tagName: string, push: boolean, cwd: PortablePath) {
   }
 }
 
-export async function addAndCommit(files: string[], message: string, cwd: PortablePath) {
+export async function addCommitAndPush(files: string[], message: string, cwd: PortablePath) {
   const addResponse = await execUtils.execvp('git', ['add', ...files], { cwd, encoding: 'utf-8'});
   console.log(addResponse.stdout);
   
   const commitResponse = await execUtils.execvp('git', ['commit', ...files, '-m', message], { cwd, encoding: 'utf-8'});
   console.log(commitResponse.stdout);  
+
+  const pushResponse = await execUtils.execvp('git', ['push'], { cwd, encoding: 'utf-8'});
+  console.log(pushResponse.stdout);  
 }
 
 export function tagPrefix(globalTagPrefix: string, locator?: Locator) {

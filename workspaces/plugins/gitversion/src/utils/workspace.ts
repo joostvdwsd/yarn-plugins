@@ -40,7 +40,7 @@ export async function updateWorkspaceChangelog(workspace: Workspace, version: st
   if (lastReleaseMatch && lastReleaseMatch.length > 1) {
     if (lastReleaseMatch[1] === version) {
       // report.reportInfo(MessageName.UNNAMED, 'Release already in CHANGELOG.md. Skipping new update');
-      return;
+      return filename;
     }
   }
 
@@ -53,5 +53,7 @@ export async function updateWorkspaceChangelog(workspace: Workspace, version: st
   }
 
   report.reportInfo(MessageName.UNNAMED, `[CHANGELOG] Outputting changes to ${structUtils.stringifyLocator(workspace.locator)}/${CHANGELOG_FILE}`)
-  return writeFile(filename, header + '\n' + (changelog + oldContent).replace(/\n+$/, '\n'), 'utf-8')
+  await writeFile(filename, header + '\n' + (changelog + oldContent).replace(/\n+$/, '\n'), 'utf-8')
+
+  return filename;
 }

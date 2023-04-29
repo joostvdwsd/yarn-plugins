@@ -49,9 +49,9 @@ export class PackManifest implements IPackManifest {
     const version = workspace.manifest.version ?? '0.0.0';
     return {
       name: structUtils.slugifyLocator(workspace.locator),
-      cwd: workspace.cwd,
+      cwd: workspace.relativeCwd,
       version: version,
-      changelog: await bumpChangelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), workspace, report)
+      changelog: await bumpChangelog(version, tagPrefix(configuration.versionTagPrefix), workspace)
     }
   }
 
@@ -67,13 +67,14 @@ export class PackManifest implements IPackManifest {
 
     for (const workspace of workspaces) {
       const info = await this.workspaceInfo(workspace, configuration, report)
-      manifest.packages[info.name] = info;
+
+      manifest.packages[structUtils.stringifyIdent(workspace.locator)] = info;
     }
 
     return manifest;
   }
 
-  static async fromPackageFolder(project: Project, packFolder: string) {
+  static async fromPackageFolder(packFolder: string) {
     const fileName = join(packFolder, PACK_MANIFEST_NAME);
     if (existsSync(fileName)) {
       const content = JSON.parse(await readFile(fileName, 'utf-8'));

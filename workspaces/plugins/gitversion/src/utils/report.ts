@@ -4,7 +4,7 @@ import { GitVersionConfiguration } from "./configuration";
 export async function runStep(name: string, context: CommandContext, cb: (report: Report, configuration: GitVersionConfiguration) => void) {
   const yarnConfig = await Configuration.find(context.cwd, context.plugins);
 
-  const resporter = await StreamReport.start({
+  const reporter = await StreamReport.start({
     configuration: yarnConfig,
     stdout: context.stdout,
   }, async (report: StreamReport) => {
@@ -15,5 +15,5 @@ export async function runStep(name: string, context: CommandContext, cb: (report
       await cb(report, configuration);
     });
   });
-  resporter.exitCode();
+  return reporter.exitCode();
 };

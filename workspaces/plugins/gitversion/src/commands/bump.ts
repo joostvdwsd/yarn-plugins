@@ -38,7 +38,7 @@ export class GitVersionBumpCommand extends BaseCommand {
         
         if (version) {
 
-          const changelog = await bumpChangelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace, report);
+          const changelog = await bumpChangelog(version, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace);
 
           console.log('Changelog:\n', changelog)
           const bumpInfo : GitVersionBump = {
@@ -52,11 +52,7 @@ export class GitVersionBumpCommand extends BaseCommand {
           await updateWorkspacesVersion(project.workspaces, version, report);
 
           for (let workspace of project.workspaces) {
-            const changelog = await bumpChangelog(configuration.versionBranch, version, tagPrefix(configuration.versionTagPrefix), workspace, report);            
-            if (changelog) {
-              updateWorkspaceChangelog(workspace, version, changelog, report);
-            }
-
+            const changelog = await bumpChangelog(version, tagPrefix(configuration.versionTagPrefix), workspace);
             bumpInfo.workspaces.push({
               locator: workspace.locator,
               private: workspace.manifest.private,

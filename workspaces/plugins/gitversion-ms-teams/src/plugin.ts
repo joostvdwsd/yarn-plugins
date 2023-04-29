@@ -31,13 +31,13 @@ export class GitVersionCheckCommand extends BaseCommand {
     }, {
       locator: project.topLevelWorkspace.locator,
       version: project.topLevelWorkspace.manifest.version ?? '1.2.3',
-      changelog: `## [1.1.0](unknown/joostvdwsd/yarn-plugins-test/compare/v1.0.0...v1.1.0) (2023-04-06)
+//       changelog: `## [1.1.0](unknown/joostvdwsd/yarn-plugins-test/compare/v1.0.0...v1.1.0) (2023-04-06)
 
 
-### Features
+// ### Features
 
-* test for feature ([dafadcb](unknown/joostvdwsd/yarn-plugins-test/commit/dafadcb08a911fcc206f24011782dd85e0138638))
-      `,
+// * test for feature ([dafadcb](unknown/joostvdwsd/yarn-plugins-test/commit/dafadcb08a911fcc206f24011782dd85e0138638))
+//       `,
       private: true,
       workspaces: []
     }, true)

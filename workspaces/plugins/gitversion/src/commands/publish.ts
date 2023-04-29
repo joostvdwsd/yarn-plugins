@@ -3,15 +3,13 @@ import { MessageName, miscUtils, Project, Report, scriptUtils, structUtils, Work
 import { BranchType, GitVersionBump } from "../types";
 
 import { join } from 'path';
-import { GitVersionTagCommand } from "./tag";
-import { GitVersionCommitCommand } from "./commit";
 import { createReadStream, existsSync } from "fs";
 import { Option, UsageError } from "clipanion";
 import { runStep } from "../utils/report";
 import { PackManifest } from "../utils/pack-manifest";
 import { packUtils } from '@yarnpkg/plugin-pack';
 import { npmConfigUtils, npmHttpUtils, npmPublishUtils } from '@yarnpkg/plugin-npm';
-import { GitVersionConfiguration } from "../utils";
+import { addCommitAndPush, DEFAULT_REPO_VERSION, GitVersionConfiguration, tag, updateWorkspaceChangelog } from "../utils";
 import { Readable } from "stream";
 
 export class GitVersionPublishCommand extends BaseCommand {
@@ -21,39 +19,19 @@ export class GitVersionPublishCommand extends BaseCommand {
 
   dryRun = Option.Boolean('-n,--dry-run', false);
   skipTag = Option.Boolean('--skipTag', false);
-  skipCommit = Option.Boolean('--skipCommit', false);
+  skipChangelog = Option.Boolean('--skipChangelog', false);
+  usePrepacked = Option.Boolean('-p,--prepacked', false, {
+    description: 'Use a previously packed folder'
+  });
 
-  packFolder = Option.String('Git version package folder', '.yarn/gitversion/package');
+  packFolder = Option.String('--pack-folder', '.yarn/gitversion/package');
 
   otp = Option.String(`--otp`, {
     description: `The OTP token to use with the command`,
   });  
 
-  async execute() {
-
-    // first execute tag
-
-    const doSkipTag = this.dryRun || this.skipTag;
-    if (!doSkipTag) {
-      const tagCommand = new GitVersionTagCommand();
-      tagCommand.context = this.context;
-      tagCommand.cli = this.cli;
-      await tagCommand.execute();
-    } else {
-      console.log("Skipping tag")
-    }
-
-    const doSkipCommit = this.dryRun || this.skipCommit;
-    if (!doSkipCommit) {
-      const commitCommand = new GitVersionCommitCommand();
-      commitCommand.context = this.context;
-      commitCommand.cli = this.cli;
-      await commitCommand.execute();
-    } else {
-      console.log("Skipping commit")
-    }
-    
-    await runStep('Publishing packages', this.context, async (report, configuration) => {
+  async execute() {   
+    return await runStep('Publishing packages', this.context, async (report, configuration) => {
       if (configuration.versionBranch.branchType === BranchType.UNKNOWN) {
         report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
         return;
@@ -66,7 +44,7 @@ export class GitVersionPublishCommand extends BaseCommand {
       } else {
         const publicWorkspaces = project.topLevelWorkspace.getRecursiveWorkspaceChildren().filter(this.filterPublicWorkspace);
 
-        const packManifest = await PackManifest.fromPackageFolder(project, this.packFolder) ?? await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
+        const packManifest = await PackManifest.fromPackageFolder(this.packFolder) ?? await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
 
         const bumpInfo : GitVersionBump = {
           locator: project.topLevelWorkspace.locator,
@@ -78,32 +56,52 @@ export class GitVersionPublishCommand extends BaseCommand {
 
         report.reportSeparator();
 
+        if (this.usePrepacked) {
+          // verify pack folder
+          for (const workspace of publicWorkspaces) {
+            const ident = structUtils.stringifyIdent(workspace.locator);
+
+            if (!packManifest.packages[ident]) {
+              throw new Error(`Package ${structUtils.prettyIdent(configuration.yarnConfig, workspace.locator)} not in package manifest!`);
+            }
+
+            const packFilename = join(this.packFolder, packManifest.packages[ident].name) + '.tgz';
+
+            if (!existsSync(packFilename)) {
+              throw new Error(`Packge ${packFilename} does not exist!`)
+            }
+          }
+        }
+
         for (const workspace of publicWorkspaces) {
 
           await scriptUtils.maybeExecuteWorkspaceLifecycleScript(workspace, `prepublish`, {report});
-          const ident = structUtils.slugifyLocator(workspace.locator);
-          const packFilename = join(this.packFolder, ident) + '.tgz';
+          const ident = structUtils.stringifyIdent(workspace.locator);
+          const packFilename = join(this.packFolder, packManifest.packages[ident].name) + '.tgz';
+          const version = packManifest.packages[ident]?.version ?? workspace.manifest.version ?? '0.0.0';
 
           bumpInfo.workspaces.push({
             locator: workspace.locator,
             private: false,
-            version: workspace.manifest.version ?? '0.0.0',
+            version: version,
             changelog: packManifest.packages[ident].changelog,            
           })
 
-          if (packManifest.packages[ident] && existsSync(packFilename)) {
+          if (this.usePrepacked) {
+            workspace.manifest.version = version;
             report.reportInfo(MessageName.UNNAMED, `Pre packed archive found in ${packFilename}. Publishing archive`);
             const packStream = createReadStream(packFilename);
             await this.publish({ configuration, packStream, workspace, report })
           } else {
 
+            workspace.manifest.version = version;
             report.reportInfo(MessageName.UNNAMED, `Packing workspace for publishing ${structUtils.prettyIdent(configuration.yarnConfig, workspace.locator)}`);
             await packUtils.prepareForPack(workspace, {report}, async () => {
               const files = await packUtils.genPackList(workspace);
       
               for (const file of files) {
                 report.reportInfo(null, ` - ${file}`);
-              }  
+              }
     
               const packStream = await packUtils.genPackStream(workspace, files);
               await this.publish({ configuration, packStream, workspace, report })
@@ -114,6 +112,9 @@ export class GitVersionPublishCommand extends BaseCommand {
           report.reportInfo(MessageName.UNNAMED, `Package archive published`);
           report.reportSeparator();
         }
+
+        await this.tagRelease(configuration, project, packManifest, report);
+        await this.updateChangeLogs(configuration, project, packManifest, report);
 
         await project.configuration.triggerHook(hooks => {
           return hooks.afterPublish;
@@ -153,6 +154,66 @@ export class GitVersionPublishCommand extends BaseCommand {
         otp: this.otp,
         jsonResponse: true,
       });
+    }
+  }
+
+  async tagRelease(configuration: GitVersionConfiguration, project: Project, manifest: PackManifest, report: Report) {
+    if (this.dryRun || this.skipTag) {
+      report.reportInfo(MessageName.UNNAMED, 'Skipping tag');
+      return
+    }
+
+    if (configuration.independentVersioning) {
+      throw new Error('IndependentVersioning not implemented');
+    } else {
+      const tagName = `${configuration.versionTagPrefix}${manifest.project.version}`;
+      report.reportInfo(MessageName.UNNAMED, `Tagging release to ${tagName}`);
+      if (!manifest.project.version) {
+        throw new Error('Invalid project version in manifest')
+      }
+      await tag(`${tagName}`, true, project.cwd);
+    }
+  }
+
+  async updateChangeLogs(configuration: GitVersionConfiguration, project: Project, manifest: PackManifest, report: Report) {
+    if (this.dryRun || this.skipChangelog) {
+      report.reportInfo(MessageName.UNNAMED, 'Skipping tag');
+      return
+    }
+
+    const topVersion = manifest.project.version ?? DEFAULT_REPO_VERSION;
+
+    if (topVersion === DEFAULT_REPO_VERSION) {
+      report.reportInfo(MessageName.UNNAMED, `No active bump detected. Skipping commit step`);
+      return;
+    }
+
+    if (manifest.project.changelog) {
+      const changelogFiles : string[] = [];
+
+      changelogFiles.push(await updateWorkspaceChangelog(project.topLevelWorkspace, topVersion, manifest.project.changelog, report));
+
+      for (const workspace of project.workspaces) {
+        const ident = structUtils.stringifyIdent(workspace.locator);
+        if (manifest.packages[ident]) {
+          const changelog = manifest.packages[ident].changelog;
+          if (changelog) {
+            changelogFiles.push(await updateWorkspaceChangelog(workspace, manifest.packages[ident].version ?? topVersion, changelog, report));
+          }
+        }
+      }
+
+      if (changelogFiles.length === 0) {
+        report.reportInfo(MessageName.UNNAMED, 'No changelog files to commit. Skipping commit step');
+        return;
+      }
+
+      if (configuration.versionBranch.branchType === BranchType.FEATURE) {        
+        report.reportInfo(MessageName.UNNAMED, 'Skipping changelog commit and push due to feature branch');
+        return;
+      }
+  
+      await addCommitAndPush(changelogFiles , `chore(changelogs): ${topVersion}`, project.cwd)
     }
   }
   

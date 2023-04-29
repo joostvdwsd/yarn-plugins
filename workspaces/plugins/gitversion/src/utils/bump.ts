@@ -1,4 +1,4 @@
-import { BranchType, GitVersionBranch } from "../types";
+import { GitVersionBranch } from "../types";
 import { MessageName, Report, Workspace } from "@yarnpkg/core";
 import { generateChangeLog, loadConventionalCommitConfig, recommendedBump } from "./conventionalcommit";
 
@@ -28,12 +28,7 @@ export async function bumpVersion(versionBranch: GitVersionBranch, tagPrefix: st
   return bump.version;
 }
 
-export async function bumpChangelog(versionBranch: GitVersionBranch, version: string, tagPrefix: string, workspace: Workspace, report: Report) {
-
-  if (versionBranch.branchType === BranchType.FEATURE) {
-    return;
-  }
-
+export async function bumpChangelog(version: string, tagPrefix: string, workspace: Workspace) {
   const config = await loadConventionalCommitConfig(workspace.project);
 
   const currentCwd = process.cwd();
