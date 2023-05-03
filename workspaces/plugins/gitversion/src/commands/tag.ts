@@ -14,7 +14,7 @@ export class GitVersionTagCommand extends BaseCommand {
   push = Option.Boolean('Push the tags to git', true);
 
   async execute() {
-    await runStep('Resetting file versions', this.context, async (report, configuration) => {
+    await runStep('Tagging release', this.context, async (report, configuration) => {
       if (configuration.versionBranch.branchType === BranchType.UNKNOWN) {
         report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
         return;

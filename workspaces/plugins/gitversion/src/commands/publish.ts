@@ -149,7 +149,7 @@ export class GitVersionPublishCommand extends BaseCommand {
     } else {
       await npmHttpUtils.put(npmHttpUtils.getIdentUrl(workspace.manifest.name), body, {
         configuration: configuration.yarnConfig,
-        registry,
+        registry,        
         ident: workspace.manifest.name,
         otp: this.otp,
         jsonResponse: true,

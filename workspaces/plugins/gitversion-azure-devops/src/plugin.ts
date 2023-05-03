@@ -25,9 +25,9 @@ const plugin: Plugin = {
         ...result,
         parserOpts: {
           ...result.parserOpts,
-          headerPattern: new RegExp(headerPattern.replace('/^', '^(?:Merged PR \d+: )?').replace(/\/$/, '')),
-          breakingHeaderPattern: new RegExp(breakingHeaderPattern.replace('/^', '^(?:Merged PR \d+: )?').replace(/\/$/, '')),
-          revertPattern: new RegExp(revertPattern.replace('/^', '^(?:Merged PR \d+: )?').replace(/\/$/, '')),
+          headerPattern: new RegExp(headerPattern.replace('/^', '^(?:Merged PR \\d+: )?').replace(/\/$/, '')),
+          breakingHeaderPattern: new RegExp(breakingHeaderPattern.replace('/^', '^(?:Merged PR \\d+: )?').replace(/\/$/, '')),
+          revertPattern: new RegExp(revertPattern.replace('/^', '^(?:Merged PR \\d+: )?').replace(/\/$/, '')),
         },
       }
     },

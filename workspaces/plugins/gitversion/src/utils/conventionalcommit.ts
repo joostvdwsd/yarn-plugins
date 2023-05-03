@@ -85,12 +85,12 @@ export async function generateChangeLog(options: GenerateChangelogParams) : Prom
       skipUnstable: true,
     } as any, {
       version: options.version,
-      host: 'unknown',
+      host: 'unknown',      
     }, { 
       merges: null, 
       path: options.path,
     }, options.config.parserOpts,
-      options.config.writerOpts
+      options.config.writerOpts,      
     );
     let content: string = '';
     
@@ -101,6 +101,7 @@ export async function generateChangeLog(options: GenerateChangelogParams) : Prom
     changelogStream.on('end', function () {
 
       const lines = content.split('\n');
+      console.log(lines)
 
       if (lines.length == 3) {
         if (lines[1].trim().length === 0 && lines[2].trim().length === 0) {
