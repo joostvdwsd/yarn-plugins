@@ -1,5 +1,5 @@
 import { Configuration, Hooks, Plugin, Project, SettingsType } from '@yarnpkg/core';
-import { BranchType, GitVersionBranch, GitVersionBump } from 'yarn-plugin-gitversion';
+import { BranchType, GitVersionBranch, GitVersionBump } from '@jvdwaalsd/yarn-plugin-gitversion';
 import { payload } from './payload';
 import { BaseCommand } from '@yarnpkg/cli';
 import { request, RequestOptions } from 'https';

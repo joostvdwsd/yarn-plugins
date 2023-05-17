@@ -1,18 +1,18 @@
 {
-  "name": "yarn-plugin-gitversion-azure-devops",
+  "name": "@jvdwaalsd/yarn-plugin-gitversion-azure-devops",
   "main": "./src/index.ts",
   "dependencies": {
+    "@jvdwaalsd/yarn-plugin-gitversion": "workspace:^",
     "@yarnpkg/cli": "^3",
     "@yarnpkg/core": "^3",
     "conventional-changelog-conventionalcommits": "^5.0.0",
-    "conventional-changelog-presets-loader": "workspace:^",
-    "yarn-plugin-gitversion": "workspace:^"
+    "conventional-changelog-presets-loader": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "typescript": "^5.0.4"
   },
-  "version": "0.0.0",
+  "version": "0.1.5",
   "publishConfig": {
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts"

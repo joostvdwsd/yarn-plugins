@@ -1,6 +1,6 @@
 import { Hooks, Plugin, Project, structUtils } from '@yarnpkg/core';
 import { AnyPresetConfig, loadPreset } from 'conventional-changelog-presets-loader';
-import { GitVersionBranch, GitVersionBump } from 'yarn-plugin-gitversion';
+import { GitVersionBranch, GitVersionBump } from '@jvdwaalsd/yarn-plugin-gitversion';
 
 const plugin: Plugin = {
   configuration: {
@@ -38,7 +38,7 @@ const plugin: Plugin = {
       console.log(`  Output variable   : version=${projectBump.version}`);
       console.log(`  Change buildnumber: ${buildNumber}`);
       
-      console.log(`##vso[task.setvariable variable=version;isOutput=true]${projectBump.version}}`)
+      console.log(`##vso[task.setvariable variable=version;isOutput=true]${projectBump.version}`)
       console.log(`##vso[build.updatebuildnumber]${buildNumber}`);
       console.log('\n==============================================================\n');
     }

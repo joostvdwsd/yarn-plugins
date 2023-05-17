@@ -1,5 +1,5 @@
 {
-  "name": "yarn-plugin-gitversion",
+  "name": "@jvdwaalsd/yarn-plugin-gitversion",
   "main": "./src/index.ts",
   "dependencies": {
     "@yarnpkg/cli": "^3",
@@ -26,7 +26,7 @@
     "release": "yarn local publish",
     "build:prod": "yarn tsc --noEmit && yarn local build --production"
   },
-  "version": "0.0.0",
+  "version": "0.1.5",
   "devDependencies": {
     "@types/changelog-parser": "^2.8.1",
     "@types/conventional-changelog": "^3.1.1",

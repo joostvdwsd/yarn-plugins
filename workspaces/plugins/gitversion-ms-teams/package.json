@@ -1,16 +1,16 @@
 {
-  "name": "yarn-plugin-gitversion-ms-teams",
+  "name": "@jvdwaalsd/yarn-plugin-gitversion-ms-teams",
   "main": "./src/index.ts",
   "dependencies": {
+    "@jvdwaalsd/yarn-plugin-gitversion": "workspace:^",
     "@yarnpkg/cli": "^3",
-    "@yarnpkg/core": "^3",
-    "yarn-plugin-gitversion": "workspace:^"
+    "@yarnpkg/core": "^3"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "typescript": "^5.0.4"
   },
-  "version": "0.0.0",
+  "version": "0.1.5",
   "publishConfig": {
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts"

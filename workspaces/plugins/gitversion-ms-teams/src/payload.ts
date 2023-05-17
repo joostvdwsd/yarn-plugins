@@ -1,5 +1,5 @@
 import { structUtils } from "@yarnpkg/core";
-import { BranchType, GitVersionBranch, GitVersionBump } from "yarn-plugin-gitversion";
+import { BranchType, GitVersionBranch, GitVersionBump } from "@jvdwaalsd/yarn-plugin-gitversion";
 
 
 export interface PayloadUrl {

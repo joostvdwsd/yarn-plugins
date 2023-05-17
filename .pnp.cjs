@@ -24,25 +24,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:workspaces/packages/conventional-changelog-presets-loader"\
       },\
       {\
-        "name": "yarn-plugin-gitversion",\
+        "name": "@jvdwaalsd/yarn-plugin-gitversion",\
         "reference": "workspace:workspaces/plugins/gitversion"\
       },\
       {\
-        "name": "yarn-plugin-gitversion-azure-devops",\
+        "name": "@jvdwaalsd/yarn-plugin-gitversion-azure-devops",\
         "reference": "workspace:workspaces/plugins/gitversion-azure-devops"\
       },\
       {\
-        "name": "yarn-plugin-gitversion-ms-teams",\
+        "name": "@jvdwaalsd/yarn-plugin-gitversion-ms-teams",\
         "reference": "workspace:workspaces/plugins/gitversion-ms-teams"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
+      ["@jvdwaalsd/yarn-plugin-gitversion", ["workspace:workspaces/plugins/gitversion"]],\
+      ["@jvdwaalsd/yarn-plugin-gitversion-azure-devops", ["workspace:workspaces/plugins/gitversion-azure-devops"]],\
+      ["@jvdwaalsd/yarn-plugin-gitversion-ms-teams", ["workspace:workspaces/plugins/gitversion-ms-teams"]],\
       ["conventional-changelog-presets-loader", ["workspace:workspaces/packages/conventional-changelog-presets-loader"]],\
-      ["yarn-plugin-gitversion", ["workspace:workspaces/plugins/gitversion"]],\
-      ["yarn-plugin-gitversion-azure-devops", ["workspace:workspaces/plugins/gitversion-azure-devops"]],\
-      ["yarn-plugin-gitversion-ms-teams", ["workspace:workspaces/plugins/gitversion-ms-teams"]],\
       ["yarn-plugin-local-development", ["workspace:workspaces/local"]],\
       ["yarn-plugins", ["workspace:."]]\
     ],\
@@ -373,6 +373,71 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jridgewell/sourcemap-codec", "npm:1.4.15"]\
           ],\
           "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@jvdwaalsd/yarn-plugin-gitversion", [\
+        ["workspace:workspaces/plugins/gitversion", {\
+          "packageLocation": "./workspaces/plugins/gitversion/",\
+          "packageDependencies": [\
+            ["@jvdwaalsd/yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"],\
+            ["@types/changelog-parser", "npm:2.8.1"],\
+            ["@types/conventional-changelog", "npm:3.1.1"],\
+            ["@types/conventional-changelog-core", "npm:4.2.1"],\
+            ["@types/conventional-changelog-preset-loader", "npm:2.3.1"],\
+            ["@types/conventional-commits-parser", "npm:3.0.3"],\
+            ["@types/conventional-recommended-bump", "npm:6.1.0"],\
+            ["@types/node", "npm:18.15.11::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40types%2Fnode%2F-%2Fnode-18.15.11.tgz"],\
+            ["@types/semver", "npm:7.3.10"],\
+            ["@yarnpkg/cli", "virtual:9b3e70fb649073ce2ef5ec214bf14c34e4335e2345675bbe514adafc9482728afc569e97cd3ac65616d7f039112010afe5e49fe20106b9b7610c155f6831457b#npm:3.5.0::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40yarnpkg%2Fcli%2F-%2Fcli-3.5.0.tgz"],\
+            ["@yarnpkg/core", "npm:3.5.0"],\
+            ["@yarnpkg/fslib", "npm:2.6.2"],\
+            ["@yarnpkg/plugin-npm", "virtual:f63b13839aa48828649eb6914d6541649c8c485bd0d29ffe01788a612e7a0c1568d40cbad8e669196a727a37b7a1d2de3a59f6d2789458adc29b308eaeefde7c#npm:3.0.0-rc.42"],\
+            ["@yarnpkg/plugin-pack", "virtual:87beb9108d16dba4b5eed9b4ea73aaede576b4953807dcb342991b5874d8c60c1b373e8364b8bb83b6d0600d072cf606f6859e625b6f349b7cc03658ee5ed4e9#npm:3.2.0"],\
+            ["changelog-parser", "npm:2.8.1"],\
+            ["clipanion", "virtual:f63b13839aa48828649eb6914d6541649c8c485bd0d29ffe01788a612e7a0c1568d40cbad8e669196a727a37b7a1d2de3a59f6d2789458adc29b308eaeefde7c#npm:3.2.0"],\
+            ["compare-versions", "npm:4.1.3"],\
+            ["conventional-changelog", "npm:3.1.25"],\
+            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
+            ["conventional-changelog-core", "npm:4.2.4"],\
+            ["conventional-changelog-presets-loader", "workspace:workspaces/packages/conventional-changelog-presets-loader"],\
+            ["conventional-commits-parser", "npm:3.2.4"],\
+            ["conventional-recommended-bump", "npm:6.1.0"],\
+            ["p-queue", "npm:7.3.0"],\
+            ["semver", "npm:7.3.7"],\
+            ["typanion", "npm:3.12.1"],\
+            ["typescript", "patch:typescript@npm%3A5.0.4%3A%3A__archiveUrl=https%253A%252F%252Fjfrog.swf.nl.aegon.io%252Fartifactory%252Fapi%252Fnpm%252Fnpm%252Ftypescript%252F-%252Ftypescript-5.0.4.tgz#~builtin<compat/typescript>::version=5.0.4&hash=85af82"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@jvdwaalsd/yarn-plugin-gitversion-azure-devops", [\
+        ["workspace:workspaces/plugins/gitversion-azure-devops", {\
+          "packageLocation": "./workspaces/plugins/gitversion-azure-devops/",\
+          "packageDependencies": [\
+            ["@jvdwaalsd/yarn-plugin-gitversion-azure-devops", "workspace:workspaces/plugins/gitversion-azure-devops"],\
+            ["@jvdwaalsd/yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"],\
+            ["@types/node", "npm:18.15.11::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40types%2Fnode%2F-%2Fnode-18.15.11.tgz"],\
+            ["@yarnpkg/cli", "virtual:9b3e70fb649073ce2ef5ec214bf14c34e4335e2345675bbe514adafc9482728afc569e97cd3ac65616d7f039112010afe5e49fe20106b9b7610c155f6831457b#npm:3.5.0::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40yarnpkg%2Fcli%2F-%2Fcli-3.5.0.tgz"],\
+            ["@yarnpkg/core", "npm:3.5.0"],\
+            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
+            ["conventional-changelog-presets-loader", "workspace:workspaces/packages/conventional-changelog-presets-loader"],\
+            ["typescript", "patch:typescript@npm%3A5.0.4%3A%3A__archiveUrl=https%253A%252F%252Fjfrog.swf.nl.aegon.io%252Fartifactory%252Fapi%252Fnpm%252Fnpm%252Ftypescript%252F-%252Ftypescript-5.0.4.tgz#~builtin<compat/typescript>::version=5.0.4&hash=85af82"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@jvdwaalsd/yarn-plugin-gitversion-ms-teams", [\
+        ["workspace:workspaces/plugins/gitversion-ms-teams", {\
+          "packageLocation": "./workspaces/plugins/gitversion-ms-teams/",\
+          "packageDependencies": [\
+            ["@jvdwaalsd/yarn-plugin-gitversion-ms-teams", "workspace:workspaces/plugins/gitversion-ms-teams"],\
+            ["@jvdwaalsd/yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"],\
+            ["@types/node", "npm:18.15.11::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40types%2Fnode%2F-%2Fnode-18.15.11.tgz"],\
+            ["@yarnpkg/cli", "virtual:9b3e70fb649073ce2ef5ec214bf14c34e4335e2345675bbe514adafc9482728afc569e97cd3ac65616d7f039112010afe5e49fe20106b9b7610c155f6831457b#npm:3.5.0::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40yarnpkg%2Fcli%2F-%2Fcli-3.5.0.tgz"],\
+            ["@yarnpkg/core", "npm:3.5.0"],\
+            ["typescript", "patch:typescript@npm%3A5.0.4%3A%3A__archiveUrl=https%253A%252F%252Fjfrog.swf.nl.aegon.io%252Fartifactory%252Fapi%252Fnpm%252Fnpm%252Ftypescript%252F-%252Ftypescript-5.0.4.tgz#~builtin<compat/typescript>::version=5.0.4&hash=85af82"]\
+          ],\
+          "linkType": "SOFT"\
         }]\
       ]],\
       ["@nodelib/fs.scandir", [\
@@ -1627,28 +1692,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.0.0-rc.42", {\
-          "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-c767449f8e/0/cache/@yarnpkg-plugin-npm-npm-3.0.0-rc.42-5d78abf49c-33d676d884.zip/node_modules/@yarnpkg/plugin-npm/",\
-          "packageDependencies": [\
-            ["@yarnpkg/plugin-npm", "virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.0.0-rc.42"],\
-            ["@types/yarnpkg__core", null],\
-            ["@types/yarnpkg__plugin-pack", null],\
-            ["@yarnpkg/core", "npm:3.5.0"],\
-            ["@yarnpkg/fslib", "npm:3.0.0-rc.42"],\
-            ["@yarnpkg/plugin-pack", "virtual:87beb9108d16dba4b5eed9b4ea73aaede576b4953807dcb342991b5874d8c60c1b373e8364b8bb83b6d0600d072cf606f6859e625b6f349b7cc03658ee5ed4e9#npm:3.2.0"],\
-            ["enquirer", "npm:2.3.6"],\
-            ["semver", "npm:7.3.7"],\
-            ["ssri", "npm:6.0.2"],\
-            ["tslib", "npm:2.4.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/yarnpkg__core",\
-            "@types/yarnpkg__plugin-pack",\
-            "@yarnpkg/core",\
-            "@yarnpkg/plugin-pack"\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["virtual:87beb9108d16dba4b5eed9b4ea73aaede576b4953807dcb342991b5874d8c60c1b373e8364b8bb83b6d0600d072cf606f6859e625b6f349b7cc03658ee5ed4e9#npm:2.7.3", {\
           "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-bb9192d613/0/cache/@yarnpkg-plugin-npm-npm-2.7.3-d165c2fef6-b33b5a666e.zip/node_modules/@yarnpkg/plugin-npm/",\
           "packageDependencies": [\
@@ -1662,6 +1705,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["semver", "npm:7.3.7"],\
             ["ssri", "npm:6.0.2"],\
             ["tslib", "npm:1.14.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/yarnpkg__core",\
+            "@types/yarnpkg__plugin-pack",\
+            "@yarnpkg/core",\
+            "@yarnpkg/plugin-pack"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:f63b13839aa48828649eb6914d6541649c8c485bd0d29ffe01788a612e7a0c1568d40cbad8e669196a727a37b7a1d2de3a59f6d2789458adc29b308eaeefde7c#npm:3.0.0-rc.42", {\
+          "packageLocation": "./.yarn/__virtual__/@yarnpkg-plugin-npm-virtual-bd8a80ade7/0/cache/@yarnpkg-plugin-npm-npm-3.0.0-rc.42-5d78abf49c-33d676d884.zip/node_modules/@yarnpkg/plugin-npm/",\
+          "packageDependencies": [\
+            ["@yarnpkg/plugin-npm", "virtual:f63b13839aa48828649eb6914d6541649c8c485bd0d29ffe01788a612e7a0c1568d40cbad8e669196a727a37b7a1d2de3a59f6d2789458adc29b308eaeefde7c#npm:3.0.0-rc.42"],\
+            ["@types/yarnpkg__core", null],\
+            ["@types/yarnpkg__plugin-pack", null],\
+            ["@yarnpkg/core", "npm:3.5.0"],\
+            ["@yarnpkg/fslib", "npm:3.0.0-rc.42"],\
+            ["@yarnpkg/plugin-pack", "virtual:87beb9108d16dba4b5eed9b4ea73aaede576b4953807dcb342991b5874d8c60c1b373e8364b8bb83b6d0600d072cf606f6859e625b6f349b7cc03658ee5ed4e9#npm:3.2.0"],\
+            ["enquirer", "npm:2.3.6"],\
+            ["semver", "npm:7.3.7"],\
+            ["ssri", "npm:6.0.2"],\
+            ["tslib", "npm:2.4.0"]\
           ],\
           "packagePeers": [\
             "@types/yarnpkg__core",\
@@ -2448,19 +2513,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.2.0", {\
-          "packageLocation": "./.yarn/__virtual__/clipanion-virtual-a7a6ae0258/0/cache/clipanion-npm-3.2.0-8b68f8056b-e28e6f0d48.zip/node_modules/clipanion/",\
-          "packageDependencies": [\
-            ["clipanion", "virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.2.0"],\
-            ["@types/typanion", null],\
-            ["typanion", "npm:3.12.1"]\
-          ],\
-          "packagePeers": [\
-            "@types/typanion",\
-            "typanion"\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["virtual:87beb9108d16dba4b5eed9b4ea73aaede576b4953807dcb342991b5874d8c60c1b373e8364b8bb83b6d0600d072cf606f6859e625b6f349b7cc03658ee5ed4e9#npm:3.2.0-rc.4", {\
           "packageLocation": "./.yarn/__virtual__/clipanion-virtual-da46302c55/0/cache/clipanion-npm-3.2.0-rc.4-8470d16306-c9d8ba9e16.zip/node_modules/clipanion/",\
           "packageDependencies": [\
@@ -2495,6 +2547,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "packagePeers": [\
             "@types/typanion"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:f63b13839aa48828649eb6914d6541649c8c485bd0d29ffe01788a612e7a0c1568d40cbad8e669196a727a37b7a1d2de3a59f6d2789458adc29b308eaeefde7c#npm:3.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/clipanion-virtual-ba5a95149f/0/cache/clipanion-npm-3.2.0-8b68f8056b-e28e6f0d48.zip/node_modules/clipanion/",\
+          "packageDependencies": [\
+            ["clipanion", "virtual:f63b13839aa48828649eb6914d6541649c8c485bd0d29ffe01788a612e7a0c1568d40cbad8e669196a727a37b7a1d2de3a59f6d2789458adc29b308eaeefde7c#npm:3.2.0"],\
+            ["@types/typanion", null],\
+            ["typanion", "npm:3.12.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/typanion",\
+            "typanion"\
           ],\
           "linkType": "HARD"\
         }],\
@@ -5426,71 +5491,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yargs-parser", "npm:20.2.9"]\
           ],\
           "linkType": "HARD"\
-        }]\
-      ]],\
-      ["yarn-plugin-gitversion", [\
-        ["workspace:workspaces/plugins/gitversion", {\
-          "packageLocation": "./workspaces/plugins/gitversion/",\
-          "packageDependencies": [\
-            ["yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"],\
-            ["@types/changelog-parser", "npm:2.8.1"],\
-            ["@types/conventional-changelog", "npm:3.1.1"],\
-            ["@types/conventional-changelog-core", "npm:4.2.1"],\
-            ["@types/conventional-changelog-preset-loader", "npm:2.3.1"],\
-            ["@types/conventional-commits-parser", "npm:3.0.3"],\
-            ["@types/conventional-recommended-bump", "npm:6.1.0"],\
-            ["@types/node", "npm:18.15.11::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40types%2Fnode%2F-%2Fnode-18.15.11.tgz"],\
-            ["@types/semver", "npm:7.3.10"],\
-            ["@yarnpkg/cli", "virtual:9b3e70fb649073ce2ef5ec214bf14c34e4335e2345675bbe514adafc9482728afc569e97cd3ac65616d7f039112010afe5e49fe20106b9b7610c155f6831457b#npm:3.5.0::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40yarnpkg%2Fcli%2F-%2Fcli-3.5.0.tgz"],\
-            ["@yarnpkg/core", "npm:3.5.0"],\
-            ["@yarnpkg/fslib", "npm:2.6.2"],\
-            ["@yarnpkg/plugin-npm", "virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.0.0-rc.42"],\
-            ["@yarnpkg/plugin-pack", "virtual:87beb9108d16dba4b5eed9b4ea73aaede576b4953807dcb342991b5874d8c60c1b373e8364b8bb83b6d0600d072cf606f6859e625b6f349b7cc03658ee5ed4e9#npm:3.2.0"],\
-            ["changelog-parser", "npm:2.8.1"],\
-            ["clipanion", "virtual:5a2da44f0f4af128245787c73b193afe4bd263b33353205cc482e09cb164341b159fd0f8afd0351474af805aa18029c6ff46bbaae03bc7fc268251b5ef5c8c22#npm:3.2.0"],\
-            ["compare-versions", "npm:4.1.3"],\
-            ["conventional-changelog", "npm:3.1.25"],\
-            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
-            ["conventional-changelog-core", "npm:4.2.4"],\
-            ["conventional-changelog-presets-loader", "workspace:workspaces/packages/conventional-changelog-presets-loader"],\
-            ["conventional-commits-parser", "npm:3.2.4"],\
-            ["conventional-recommended-bump", "npm:6.1.0"],\
-            ["p-queue", "npm:7.3.0"],\
-            ["semver", "npm:7.3.7"],\
-            ["typanion", "npm:3.12.1"],\
-            ["typescript", "patch:typescript@npm%3A5.0.4%3A%3A__archiveUrl=https%253A%252F%252Fjfrog.swf.nl.aegon.io%252Fartifactory%252Fapi%252Fnpm%252Fnpm%252Ftypescript%252F-%252Ftypescript-5.0.4.tgz#~builtin<compat/typescript>::version=5.0.4&hash=85af82"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["yarn-plugin-gitversion-azure-devops", [\
-        ["workspace:workspaces/plugins/gitversion-azure-devops", {\
-          "packageLocation": "./workspaces/plugins/gitversion-azure-devops/",\
-          "packageDependencies": [\
-            ["yarn-plugin-gitversion-azure-devops", "workspace:workspaces/plugins/gitversion-azure-devops"],\
-            ["@types/node", "npm:18.15.11::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40types%2Fnode%2F-%2Fnode-18.15.11.tgz"],\
-            ["@yarnpkg/cli", "virtual:9b3e70fb649073ce2ef5ec214bf14c34e4335e2345675bbe514adafc9482728afc569e97cd3ac65616d7f039112010afe5e49fe20106b9b7610c155f6831457b#npm:3.5.0::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40yarnpkg%2Fcli%2F-%2Fcli-3.5.0.tgz"],\
-            ["@yarnpkg/core", "npm:3.5.0"],\
-            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
-            ["conventional-changelog-presets-loader", "workspace:workspaces/packages/conventional-changelog-presets-loader"],\
-            ["typescript", "patch:typescript@npm%3A5.0.4%3A%3A__archiveUrl=https%253A%252F%252Fjfrog.swf.nl.aegon.io%252Fartifactory%252Fapi%252Fnpm%252Fnpm%252Ftypescript%252F-%252Ftypescript-5.0.4.tgz#~builtin<compat/typescript>::version=5.0.4&hash=85af82"],\
-            ["yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["yarn-plugin-gitversion-ms-teams", [\
-        ["workspace:workspaces/plugins/gitversion-ms-teams", {\
-          "packageLocation": "./workspaces/plugins/gitversion-ms-teams/",\
-          "packageDependencies": [\
-            ["yarn-plugin-gitversion-ms-teams", "workspace:workspaces/plugins/gitversion-ms-teams"],\
-            ["@types/node", "npm:18.15.11::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40types%2Fnode%2F-%2Fnode-18.15.11.tgz"],\
-            ["@yarnpkg/cli", "virtual:9b3e70fb649073ce2ef5ec214bf14c34e4335e2345675bbe514adafc9482728afc569e97cd3ac65616d7f039112010afe5e49fe20106b9b7610c155f6831457b#npm:3.5.0::__archiveUrl=https%3A%2F%2Fjfrog.swf.nl.aegon.io%2Fartifactory%2Fapi%2Fnpm%2Fnpm%2F%40yarnpkg%2Fcli%2F-%2Fcli-3.5.0.tgz"],\
-            ["@yarnpkg/core", "npm:3.5.0"],\
-            ["typescript", "patch:typescript@npm%3A5.0.4%3A%3A__archiveUrl=https%253A%252F%252Fjfrog.swf.nl.aegon.io%252Fartifactory%252Fapi%252Fnpm%252Fnpm%252Ftypescript%252F-%252Ftypescript-5.0.4.tgz#~builtin<compat/typescript>::version=5.0.4&hash=85af82"],\
-            ["yarn-plugin-gitversion", "workspace:workspaces/plugins/gitversion"]\
-          ],\
-          "linkType": "SOFT"\
         }]\
       ]],\
       ["yarn-plugin-local-development", [\

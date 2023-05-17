@@ -17,7 +17,7 @@
   "scripts": {
     "build": "builder build plugin --no-minify"
   },
-  "version": "0.0.0",
+  "version": "0.1.5",
   "publishConfig": {
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts"
