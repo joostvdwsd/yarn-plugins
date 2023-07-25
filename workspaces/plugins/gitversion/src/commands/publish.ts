@@ -177,7 +177,7 @@ export class GitVersionPublishCommand extends BaseCommand {
 
   async updateChangeLogs(configuration: GitVersionConfiguration, project: Project, manifest: PackManifest, report: Report) {
     if (this.dryRun || this.skipChangelog) {
-      report.reportInfo(MessageName.UNNAMED, 'Skipping tag');
+      report.reportInfo(MessageName.UNNAMED, 'Skipping changelog');
       return
     }
 
