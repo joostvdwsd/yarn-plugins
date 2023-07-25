@@ -26,7 +26,7 @@
     "release": "yarn local publish",
     "build:prod": "yarn tsc --noEmit && yarn local build --production"
   },
-  "version": "0.1.5",
+  "version": "0.1.6",
   "devDependencies": {
     "@types/changelog-parser": "^2.8.1",
     "@types/conventional-changelog": "^3.1.1",
