@@ -213,7 +213,7 @@ export class GitVersionPublishCommand extends BaseCommand {
         return;
       }
   
-      await addCommitAndPush(changelogFiles , `chore(changelogs): ${topVersion}`, project.cwd)
+      await addCommitAndPush(changelogFiles , `chore(changelogs): ${topVersion} [skip ci]`, project.cwd)
     }
   }
   

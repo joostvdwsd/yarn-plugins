@@ -10,7 +10,7 @@
     "@types/node": "^18.15.11",
     "typescript": "^5.0.4"
   },
-  "version": "0.1.6",
+  "version": "0.0.0",
   "publishConfig": {
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts"
