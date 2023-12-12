@@ -1,7 +1,7 @@
 import { BaseCommand } from "@yarnpkg/cli";
 import { MessageName, Project } from "@yarnpkg/core";
 import { BranchType, GitVersionBump } from "../types";
-import { tagPrefix, updateWorkspaceChangelog, updateWorkspacesVersion } from "../utils";
+import { tagPrefix, updateWorkspacesVersion } from "../utils";
 import { bumpChangelog, bumpVersion } from "../utils/bump";
 import { runStep } from "../utils/report";
 import { GitVersionRestoreCommand } from "./restore";
@@ -25,7 +25,7 @@ export class GitVersionBumpCommand extends BaseCommand {
         report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
         return;
       }
-    
+
       const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
       if (configuration.independentVersioning) {
@@ -35,36 +35,36 @@ export class GitVersionBumpCommand extends BaseCommand {
         project.configuration.triggerHook(hooks => hooks.beforeBump, project, configuration.versionBranch)
 
         const version = await bumpVersion(configuration.versionBranch, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace, report);
-        
+
         if (version) {
 
           const changelog = await bumpChangelog(version, tagPrefix(configuration.versionTagPrefix), project.topLevelWorkspace);
 
           console.log('Changelog:\n', changelog)
-          const bumpInfo : GitVersionBump = {
-            locator: project.topLevelWorkspace.locator,
+          const bumpInfo: GitVersionBump = {
+            locator: project.topLevelWorkspace.anchoredLocator,
             private: true,
             version,
             changelog,
             workspaces: []
           }
-  
+
           await updateWorkspacesVersion(project.workspaces, version, report);
 
           for (let workspace of project.workspaces) {
             const changelog = await bumpChangelog(version, tagPrefix(configuration.versionTagPrefix), workspace);
             bumpInfo.workspaces.push({
-              locator: workspace.locator,
+              locator: workspace.anchoredLocator,
               private: workspace.manifest.private,
               version: version,
               changelog: changelog
             })
-          }          
+          }
 
           project.configuration.triggerHook(hooks => {
             return hooks.afterBump
           }, project, configuration.versionBranch, bumpInfo);
-              
+
         }
       }
     });

@@ -28,14 +28,14 @@ export class GitVersionPublishCommand extends BaseCommand {
 
   otp = Option.String(`--otp`, {
     description: `The OTP token to use with the command`,
-  });  
+  });
 
-  async execute() {   
+  async execute() {
     return await runStep('Publishing packages', this.context, async (report, configuration) => {
       if (configuration.versionBranch.branchType === BranchType.UNKNOWN) {
         report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
         return;
-      }   
+      }
 
       const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
@@ -44,10 +44,10 @@ export class GitVersionPublishCommand extends BaseCommand {
       } else {
         const publicWorkspaces = project.topLevelWorkspace.getRecursiveWorkspaceChildren().filter(this.filterPublicWorkspace);
 
-        const packManifest = await PackManifest.fromPackageFolder(this.packFolder) ?? await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
+        const packManifest = (await PackManifest.fromPackageFolder(this.packFolder)) ?? (await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report));
 
-        const bumpInfo : GitVersionBump = {
-          locator: project.topLevelWorkspace.locator,
+        const bumpInfo: GitVersionBump = {
+          locator: project.topLevelWorkspace.anchoredLocator,
           private: true,
           version: packManifest.project.version ?? '0.0.0',
           changelog: packManifest.project.changelog,
@@ -59,10 +59,10 @@ export class GitVersionPublishCommand extends BaseCommand {
         if (this.usePrepacked) {
           // verify pack folder
           for (const workspace of publicWorkspaces) {
-            const ident = structUtils.stringifyIdent(workspace.locator);
+            const ident = structUtils.stringifyIdent(workspace.anchoredLocator);
 
             if (!packManifest.packages[ident]) {
-              throw new Error(`Package ${structUtils.prettyIdent(configuration.yarnConfig, workspace.locator)} not in package manifest!`);
+              throw new Error(`Package ${structUtils.prettyIdent(configuration.yarnConfig, workspace.anchoredLocator)} not in package manifest!`);
             }
 
             const packFilename = join(this.packFolder, packManifest.packages[ident].name) + '.tgz';
@@ -75,16 +75,16 @@ export class GitVersionPublishCommand extends BaseCommand {
 
         for (const workspace of publicWorkspaces) {
 
-          await scriptUtils.maybeExecuteWorkspaceLifecycleScript(workspace, `prepublish`, {report});
-          const ident = structUtils.stringifyIdent(workspace.locator);
+          await scriptUtils.maybeExecuteWorkspaceLifecycleScript(workspace, `prepublish`, { report });
+          const ident = structUtils.stringifyIdent(workspace.anchoredLocator);
           const packFilename = join(this.packFolder, packManifest.packages[ident].name) + '.tgz';
           const version = packManifest.packages[ident]?.version ?? workspace.manifest.version ?? '0.0.0';
 
           bumpInfo.workspaces.push({
-            locator: workspace.locator,
+            locator: workspace.anchoredLocator,
             private: false,
             version: version,
-            changelog: packManifest.packages[ident].changelog,            
+            changelog: packManifest.packages[ident].changelog,
           })
 
           if (this.usePrepacked) {
@@ -95,20 +95,20 @@ export class GitVersionPublishCommand extends BaseCommand {
           } else {
 
             workspace.manifest.version = version;
-            report.reportInfo(MessageName.UNNAMED, `Packing workspace for publishing ${structUtils.prettyIdent(configuration.yarnConfig, workspace.locator)}`);
-            await packUtils.prepareForPack(workspace, {report}, async () => {
+            report.reportInfo(MessageName.UNNAMED, `Packing workspace for publishing ${structUtils.prettyIdent(configuration.yarnConfig, workspace.anchoredLocator)}`);
+            await packUtils.prepareForPack(workspace, { report }, async () => {
               const files = await packUtils.genPackList(workspace);
-      
+
               for (const file of files) {
                 report.reportInfo(null, ` - ${file}`);
               }
-    
+
               const packStream = await packUtils.genPackStream(workspace, files);
               await this.publish({ configuration, packStream, workspace, report })
-      
+
             });
           }
-      
+
           report.reportInfo(MessageName.UNNAMED, `Package archive published`);
           report.reportSeparator();
         }
@@ -123,15 +123,15 @@ export class GitVersionPublishCommand extends BaseCommand {
     });
   }
 
-  async publish( { configuration, workspace, packStream, report } : {configuration: GitVersionConfiguration, workspace: Workspace, packStream: Readable, report: Report }) {
+  async publish({ configuration, workspace, packStream, report }: { configuration: GitVersionConfiguration, workspace: Workspace, packStream: Readable, report: Report }) {
     if (workspace.manifest.name === null || workspace.manifest.version === null) {
       throw new UsageError(`Workspaces must have valid names and versions to be published on an external registry`);
     }
 
     const buffer = await miscUtils.bufferStream(packStream);
-    const registry = npmConfigUtils.getPublishRegistry(workspace.manifest, {configuration: configuration.yarnConfig});
+    const registry = npmConfigUtils.getPublishRegistry(workspace.manifest, { configuration: configuration.yarnConfig });
 
-    let releaseTag : string = 'latest';
+    let releaseTag: string = 'latest';
     if (configuration.versionBranch.branchType === BranchType.FEATURE || configuration.versionBranch.branchType === BranchType.PRERELEASE) {
       releaseTag = configuration.versionBranch.name;
     }
@@ -145,11 +145,11 @@ export class GitVersionPublishCommand extends BaseCommand {
     });
 
     if (this.dryRun) {
-      report.reportInfo(MessageName.UNNAMED, `[DRY-RUN] Would execute put request to '${registry}' for '${structUtils.prettyLocator(configuration.yarnConfig, workspace.locator)}' with tag '${releaseTag}'`);      
+      report.reportInfo(MessageName.UNNAMED, `[DRY-RUN] Would execute put request to '${registry}' for '${structUtils.prettyLocator(configuration.yarnConfig, workspace.anchoredLocator)}' with tag '${releaseTag}'`);
     } else {
       await npmHttpUtils.put(npmHttpUtils.getIdentUrl(workspace.manifest.name), body, {
         configuration: configuration.yarnConfig,
-        registry,        
+        registry,
         ident: workspace.manifest.name,
         otp: this.otp,
         jsonResponse: true,
@@ -189,12 +189,12 @@ export class GitVersionPublishCommand extends BaseCommand {
     }
 
     if (manifest.project.changelog) {
-      const changelogFiles : string[] = [];
+      const changelogFiles: string[] = [];
 
       changelogFiles.push(await updateWorkspaceChangelog(project.topLevelWorkspace, topVersion, manifest.project.changelog, report));
 
       for (const workspace of project.workspaces) {
-        const ident = structUtils.stringifyIdent(workspace.locator);
+        const ident = structUtils.stringifyIdent(workspace.anchoredLocator);
         if (manifest.packages[ident]) {
           const changelog = manifest.packages[ident].changelog;
           if (changelog) {
@@ -208,16 +208,16 @@ export class GitVersionPublishCommand extends BaseCommand {
         return;
       }
 
-      if (configuration.versionBranch.branchType === BranchType.FEATURE) {        
+      if (configuration.versionBranch.branchType === BranchType.FEATURE) {
         report.reportInfo(MessageName.UNNAMED, 'Skipping changelog commit and push due to feature branch');
         return;
       }
-  
-      await addCommitAndPush(changelogFiles , `chore(changelogs): ${topVersion} [skip ci]`, project.cwd)
+
+      await addCommitAndPush(changelogFiles, `chore(changelogs): ${topVersion} [skip ci]`, project.cwd)
     }
   }
-  
-  filterPublicWorkspace(workspace: Workspace) : boolean {
+
+  filterPublicWorkspace(workspace: Workspace): boolean {
     return workspace.manifest.private === false
   }
 }

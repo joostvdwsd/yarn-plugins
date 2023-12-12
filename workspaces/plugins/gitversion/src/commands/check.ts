@@ -16,7 +16,7 @@ export class GitVersionCheckCommand extends BaseCommand {
       const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
       project.workspaces.forEach((child) => {
-        report.reportInfo(MessageName.UNNAMED, `${structUtils.stringifyLocator(child.locator)} Private: ${child.manifest.private}`)
+        report.reportInfo(MessageName.UNNAMED, `${structUtils.stringifyLocator(child.anchoredLocator)} Private: ${child.manifest.private}`)
       })
     });
   }

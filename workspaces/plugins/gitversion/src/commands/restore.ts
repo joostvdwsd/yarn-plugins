@@ -18,26 +18,26 @@ export class GitVersionRestoreCommand extends BaseCommand {
         report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
         return;
       }
-    
+
       const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
       if (configuration.independentVersioning) {
         const promises = project.workspaces.map((workspace) => this.updateWorkspaceFromGit(configuration.versionTagPrefix, configuration.versionBranch, workspace, report))
-        Promise.all(promises);  
+        Promise.all(promises);
       } else {
         const versionPromises = [
           this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, project),
-          ...project.workspaces.map((workspace) => this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, project, workspace.locator))
+          ...project.workspaces.map((workspace) => this.determineCurrentGitVersion(configuration.versionTagPrefix, configuration.versionBranch, project, workspace.anchoredLocator))
         ];
         const versions = (await Promise.all(versionPromises)).sort(compareVersions).reverse();
-        
+
         await updateWorkspacesVersion(project.workspaces, versions[0], report)
       }
     });
   }
 
   async updateWorkspaceFromGit(tagPrefix: string, versionBranch: GitVersionBranch, workspace: Workspace, report: Report) {
-    const currentGitVersion = await this.determineCurrentGitVersion(tagPrefix, versionBranch, workspace.project, workspace.locator)
+    const currentGitVersion = await this.determineCurrentGitVersion(tagPrefix, versionBranch, workspace.project, workspace.anchoredLocator)
     return updateWorkspaceVersion(workspace, currentGitVersion, report);
   }
 
@@ -50,12 +50,12 @@ export class GitVersionRestoreCommand extends BaseCommand {
 
     // filter only tags for this prefix and major version if specified (start with "vNN.").
 
-    const fullTagPrefix =  tagPrefix(defaultTagPrefix, childLocator);
+    const fullTagPrefix = tagPrefix(defaultTagPrefix, childLocator);
 
     const prefixFilter = `${fullTagPrefix}*`;
 
     const listGitTags = [
-      '-c', 
+      '-c',
       'versionsort.suffix=-', // makes sure pre-release versions are listed after the primary version
       'tag',
       '--sort=-version:refname', // sort as versions and not lexicographically
@@ -101,5 +101,5 @@ export class GitVersionRestoreCommand extends BaseCommand {
 
   escapeRegExp(text: string) {
     return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-  }  
+  }
 }

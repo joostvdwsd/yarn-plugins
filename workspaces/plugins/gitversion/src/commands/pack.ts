@@ -5,7 +5,7 @@ import { BranchType } from "../types";
 import { join } from 'path';
 import { Option } from "clipanion";
 import { runStep } from "../utils/report";
-import { mkdir, rm, rmdir } from "fs/promises";
+import { mkdir, rm } from "fs/promises";
 
 import PQueue from 'p-queue';
 
@@ -34,7 +34,7 @@ export class GitVersionPackCommand extends BaseCommand {
         if (configuration.versionBranch.branchType === BranchType.UNKNOWN) {
           report.reportError(MessageName.UNNAMED, 'Running on unknown branch type. Breaking off');
           return;
-        }   
+        }
 
         const { project } = await Project.find(configuration.yarnConfig, this.context.cwd);
 
@@ -47,7 +47,7 @@ export class GitVersionPackCommand extends BaseCommand {
 
         const publicWorkspaces = project.workspaces.filter(this.filterPublicWorkspace);
         const packManifest = await PackManifest.fromWorkspaces(project, publicWorkspaces, configuration, report);
-        
+
         const packFolder = join(project.cwd, this.packFolder)
         await rm(packFolder, {
           recursive: true,
@@ -81,14 +81,14 @@ export class GitVersionPackCommand extends BaseCommand {
 
   execPackCommand(workspace: Workspace, configuration: Configuration, report: Report, name: string, packFolder: string) {
     return async () => {
-      report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.prettyLocator(configuration, workspace.locator)}`)
+      report.reportInfo(MessageName.UNNAMED, `Packing ${structUtils.prettyLocator(configuration, workspace.anchoredLocator)}`)
       await execUtils.execvp('yarn', ['pack', '-o', `${join(packFolder, name)}.tgz`], {
         cwd: workspace.cwd,
       })
     }
   }
-  
-  filterPublicWorkspace(workspace: Workspace) : boolean {
+
+  filterPublicWorkspace(workspace: Workspace): boolean {
     return workspace.manifest.private === false
   }
 }

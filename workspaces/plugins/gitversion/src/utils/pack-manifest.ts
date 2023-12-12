@@ -33,7 +33,7 @@ export class PackManifest implements IPackManifest {
   constructor(project: WorkspaceInfo, gitStatus: PackManifestGitStatus) {
     this.project = project;
     this.gitStatus = gitStatus;
-  }  
+  }
 
   async write(packFolder: string) {
     const fileName = join(packFolder, PACK_MANIFEST_NAME);
@@ -48,7 +48,7 @@ export class PackManifest implements IPackManifest {
   static async workspaceInfo(workspace: Workspace, configuration: GitVersionConfiguration, report: Report) {
     const version = workspace.manifest.version ?? '0.0.0';
     return {
-      name: structUtils.slugifyLocator(workspace.locator),
+      name: structUtils.slugifyLocator(workspace.anchoredLocator),
       cwd: workspace.relativeCwd,
       version: version,
       changelog: await bumpChangelog(version, tagPrefix(configuration.versionTagPrefix), workspace)
@@ -68,7 +68,7 @@ export class PackManifest implements IPackManifest {
     for (const workspace of workspaces) {
       const info = await this.workspaceInfo(workspace, configuration, report)
 
-      manifest.packages[structUtils.stringifyIdent(workspace.locator)] = info;
+      manifest.packages[structUtils.stringifyIdent(workspace.anchoredLocator)] = info;
     }
 
     return manifest;
@@ -81,7 +81,7 @@ export class PackManifest implements IPackManifest {
 
       const result = new PackManifest(content.project, content.gitStatus);
 
-      result.packages = content.packages;  
+      result.packages = content.packages;
       return result;
     }
     return;
