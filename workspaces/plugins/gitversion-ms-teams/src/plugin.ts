@@ -6,7 +6,7 @@ import { request, RequestOptions } from 'https';
 
 declare module '@yarnpkg/core' {
   interface ConfigurationValueMap {
-    
+
     teamsWebhookUrl: string;
   }
 }
@@ -22,27 +22,27 @@ export class GitVersionCheckCommand extends BaseCommand {
     const { project } = await Project.find(yarnConfig, this.context.cwd);
 
     project.workspaces.forEach((child) => {
-      console.log(child.locator.scope, child.locator.name, child.manifest.private, child.manifest.version)
+      console.log(child.anchoredLocator.scope, child.anchoredLocator.name, child.manifest.private, child.manifest.version)
     })
 
     afterPublish(project, {
       name: 'master',
       branchType: BranchType.MAIN
     }, {
-      locator: project.topLevelWorkspace.locator,
+      locator: project.topLevelWorkspace.anchoredLocator,
       version: project.topLevelWorkspace.manifest.version ?? '1.2.3',
-//       changelog: `## [1.1.0](unknown/joostvdwsd/yarn-plugins-test/compare/v1.0.0...v1.1.0) (2023-04-06)
+      //       changelog: `## [1.1.0](unknown/joostvdwsd/yarn-plugins-test/compare/v1.0.0...v1.1.0) (2023-04-06)
 
 
-// ### Features
+      // ### Features
 
-// * test for feature ([dafadcb](unknown/joostvdwsd/yarn-plugins-test/commit/dafadcb08a911fcc206f24011782dd85e0138638))
-//       `,
+      // * test for feature ([dafadcb](unknown/joostvdwsd/yarn-plugins-test/commit/dafadcb08a911fcc206f24011782dd85e0138638))
+      //       `,
       private: true,
       workspaces: []
     }, true)
     // conventionalRecommendedBump({
-      
+
     // }, parserOpts, (error, recommendation) => {
     //   console.log(error, recommendation); // 'major'
     // })
@@ -63,13 +63,13 @@ const plugin: Plugin = {
   commands: [
     GitVersionCheckCommand
   ],
-  hooks: {  
+  hooks: {
     afterPublish: afterPublish
   } as Partial<Hooks>,
 };
 
 async function afterPublish(project: Project, branch: GitVersionBranch, bumpInfo: GitVersionBump, dryRun: boolean) {
-  const url = project.configuration.get('teamsWebhookUrl');     
+  const url = project.configuration.get('teamsWebhookUrl');
 
   const body = payload({
     bumpInfo,
@@ -98,9 +98,9 @@ async function notifyTeams(url: URL, body: any) {
         'content-length': content.length
       }
     };
-  
+
     console.log(options)
-    
+
     const req = request(options, (res) => {
       console.log('STATUS: ' + res.statusCode);
       console.log('HEADERS: ' + JSON.stringify(res.headers));
@@ -110,16 +110,16 @@ async function notifyTeams(url: URL, body: any) {
       });
       resolve(res)
     });
-    
+
     req.on('error', (e) => {
       console.log('problem with request: ' + e.message);
       reject(e)
     });
-    
+
     // write data to request body
     console.log(content)
     req.write(content);
-    req.end();  
+    req.end();
   })
 }
 
