@@ -96,6 +96,11 @@ export class GitVersionPublishCommand extends BaseCommand {
 
             workspace.manifest.version = version;
             report.reportInfo(MessageName.UNNAMED, `Packing workspace for publishing ${structUtils.prettyIdent(configuration.yarnConfig, workspace.anchoredLocator)}`);
+
+            if (await packUtils.hasPackScripts(workspace)) {
+              await project.restoreInstallState();
+            }
+
             await packUtils.prepareForPack(workspace, { report }, async () => {
               const files = await packUtils.genPackList(workspace);
 

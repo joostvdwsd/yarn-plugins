@@ -4,7 +4,7 @@
   "dependencies": {
     "@yarnpkg/cli": "^4.0.2",
     "@yarnpkg/core": "^4.0.2",
-    "@yarnpkg/fslib": "^2.5",
+    "@yarnpkg/fslib": "^3.0.1",
     "@yarnpkg/plugin-npm": "^3.0.0",
     "@yarnpkg/plugin-pack": "^4.0.0",
     "changelog-parser": "^2.8.1",

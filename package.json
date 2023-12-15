@@ -7,7 +7,7 @@
   "author": "Joost van der Waal <joost.npm@jvdwaal.nl>",
   "license": "MIT",
   "private": true,
-  "packageManager": "yarn@3.5.0",
+  "packageManager": "yarn@4.0.2",
   "workspaces": [
     "./workspaces/local",
     "./workspaces/plugins/*",
