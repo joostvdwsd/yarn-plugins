@@ -1,0 +1,24 @@
+{
+  "name": "@jvdwaalsd/yarn-plugin-prepare-manifest",
+  "dependencies": {
+    "@yarnpkg/cli": "^4.0.2",
+    "@yarnpkg/core": "^4.0.2",
+    "@yarnpkg/plugin-pack": "^4.0.0",
+    "clipanion": "^4.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.4"
+  },
+  "files": [
+    "/bundles/**/*",
+    "/lib/**/*"
+  ],
+  "scripts": {
+    "build": "yarn tsc --noEmit && yarn local build",
+    "release": "yarn local publish",
+    "build:prod": "yarn tsc --noEmit && yarn local build --production"
+  },
+  "packageManager": "yarn@4.0.2",
+  "version": "0.0.0"
+}

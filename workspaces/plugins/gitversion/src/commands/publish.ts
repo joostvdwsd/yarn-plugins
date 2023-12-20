@@ -74,9 +74,9 @@ export class GitVersionPublishCommand extends BaseCommand {
         }
 
         for (const workspace of publicWorkspaces) {
-
           await scriptUtils.maybeExecuteWorkspaceLifecycleScript(workspace, `prepublish`, { report });
           const ident = structUtils.stringifyIdent(workspace.anchoredLocator);
+          console.log('KJHJKHJKHKJHKJHKJ', packManifest.packages);
           const packFilename = join(this.packFolder, packManifest.packages[ident].name) + '.tgz';
           const version = packManifest.packages[ident]?.version ?? workspace.manifest.version ?? '0.0.0';
 

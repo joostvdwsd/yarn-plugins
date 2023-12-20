@@ -32,6 +32,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@jvdwaalsd/yarn-plugin-gitversion-ms-teams",\
       "reference": "workspace:workspaces/plugins/gitversion-ms-teams"\
+    },\
+    {\
+      "name": "@jvdwaalsd/yarn-plugin-prepare-manifest",\
+      "reference": "workspace:workspaces/plugins/prepare-manifest"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -40,6 +44,7 @@ const RAW_RUNTIME_STATE =
     ["@jvdwaalsd/yarn-plugin-gitversion", ["workspace:workspaces/plugins/gitversion"]],\
     ["@jvdwaalsd/yarn-plugin-gitversion-azure-devops", ["workspace:workspaces/plugins/gitversion-azure-devops"]],\
     ["@jvdwaalsd/yarn-plugin-gitversion-ms-teams", ["workspace:workspaces/plugins/gitversion-ms-teams"]],\
+    ["@jvdwaalsd/yarn-plugin-prepare-manifest", ["workspace:workspaces/plugins/prepare-manifest"]],\
     ["conventional-changelog-presets-loader", ["workspace:workspaces/packages/conventional-changelog-presets-loader"]],\
     ["yarn-plugin-local-development", ["workspace:workspaces/local"]],\
     ["yarn-plugins", ["workspace:."]]\
@@ -555,6 +560,21 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:18.19.3"],\
           ["@yarnpkg/cli", "virtual:1be968e10e852021717e39be5362e9ef161555fe60a16adbabe5315cf3f3fee6f4ee855a1f13adfbd9e1da4db65f29388d88e3b4b0a9cf0f1d12dbfcd8a1fa19#npm:4.0.2"],\
           ["@yarnpkg/core", "npm:4.0.2"],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@jvdwaalsd/yarn-plugin-prepare-manifest", [\
+      ["workspace:workspaces/plugins/prepare-manifest", {\
+        "packageLocation": "./workspaces/plugins/prepare-manifest/",\
+        "packageDependencies": [\
+          ["@jvdwaalsd/yarn-plugin-prepare-manifest", "workspace:workspaces/plugins/prepare-manifest"],\
+          ["@types/node", "npm:18.19.3"],\
+          ["@yarnpkg/cli", "virtual:1be968e10e852021717e39be5362e9ef161555fe60a16adbabe5315cf3f3fee6f4ee855a1f13adfbd9e1da4db65f29388d88e3b4b0a9cf0f1d12dbfcd8a1fa19#npm:4.0.2"],\
+          ["@yarnpkg/core", "npm:4.0.2"],\
+          ["@yarnpkg/plugin-pack", "virtual:0248e56a0c9470ca654c850780f17c7ecffaf0f25279c74cc4df02e0df3197a0018486cdc546a31516bfa0e11bab9d5e4622c5b79f6d168394416dc8bf22f1dd#npm:4.0.0"],\
+          ["clipanion", "virtual:3927f33f2ff9948e582ae9e8d30cfb49feeaf368768e392b4f7a246df7df71d786084a0dfaec6b657deb3805ec8ae2f049eca7e85d34cc96fe0c51239ba5e24c#npm:4.0.0-rc.2"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"]\
         ],\
         "linkType": "SOFT"\
